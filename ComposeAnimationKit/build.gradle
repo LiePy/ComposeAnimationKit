@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+//apply from: 'maven-release-aar.gradle'
+
 android {
     namespace 'com.lie.composeanimationkit'
     compileSdk 32
