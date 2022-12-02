@@ -9,12 +9,15 @@
 
 package com.lie.composeanimationkit.animation
 
+import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
@@ -28,6 +31,12 @@ import kotlin.math.min
 
 typealias SA = AnimationKit.SearchAnimation
 
+/**
+ * 雷达扫描动画
+ * @param modifier 修饰符
+ * @param color 主题色
+ * @param strokeWidth 线条粗细
+ */
 @Composable
 fun SA.RadarSearchAnimation(
     modifier: Modifier = Modifier.size(150.dp),
@@ -83,11 +92,136 @@ fun SA.RadarSearchAnimation(
             )
         }
     }
-
 }
 
 @Preview
 @Composable
 fun RadarSearchAnimationPreview() {
     SA.RadarSearchAnimation()
+}
+
+/**
+ * 搜索动画，可内嵌子组件，但是注意是在BoxScope中，且默认的Alignment是居中
+ * @param modifier 修饰符
+ * @param color 初始中心的颜色
+ * @param targetColor 散开时的颜色
+ * @param duration 从中间到最开的时间
+ * @param content 子内容
+ */
+@Composable
+fun SA.RippleSearchingAnimation(
+    modifier: Modifier = Modifier,
+    color: Color = Color.Cyan,
+    targetColor: Color = Color.Transparent,
+    size: Float = 800f,
+    duration: Int = 3000,
+    content: @Composable BoxScope.() -> Unit = {},
+) {
+
+    val infiniteTransition = rememberInfiniteTransition()
+    val color1 by infiniteTransition.animateColor(
+        initialValue = color,
+        targetValue = targetColor,
+        animationSpec = infiniteRepeatable(
+            animation = tween(duration, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
+            initialStartOffset = StartOffset(0)
+        )
+    )
+    val alpha1 by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 0.5f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(duration, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
+            initialStartOffset = StartOffset(0)
+        )
+    )
+    val size1 by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = size,
+        animationSpec = infiniteRepeatable(
+            animation = tween(duration, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
+            initialStartOffset = StartOffset(0)
+        )
+    )
+
+    val color2 by infiniteTransition.animateColor(
+        initialValue = color,
+        targetValue = targetColor,
+        animationSpec = infiniteRepeatable(
+            animation = tween(duration, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
+            initialStartOffset = StartOffset(1000)
+        )
+    )
+    val alpha2 by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 0.5f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(duration, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
+            initialStartOffset = StartOffset(1000)
+        )
+    )
+    val size2 by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = size,
+        animationSpec = infiniteRepeatable(
+            animation = tween(duration, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
+            initialStartOffset = StartOffset(1000)
+        )
+    )
+
+    val color3 by infiniteTransition.animateColor(
+        initialValue = color,
+        targetValue = targetColor,
+        animationSpec = infiniteRepeatable(
+            animation = tween(duration, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
+            initialStartOffset = StartOffset(2000)
+        )
+    )
+    val alpha3 by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 0.5f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(duration, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
+            initialStartOffset = StartOffset(2000)
+        )
+    )
+    val size3 by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = size,
+        animationSpec = infiniteRepeatable(
+            animation = tween(duration, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart,
+            initialStartOffset = StartOffset(2000)
+        )
+    )
+
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        Canvas(modifier = modifier) {
+            drawCircle(color1, radius = size1, alpha = alpha1)
+        }
+
+        Canvas(modifier = modifier) {
+            drawCircle(color2, radius = size2, alpha = alpha2)
+        }
+
+        Canvas(modifier = modifier) {
+            drawCircle(color3, radius = size3, alpha = alpha3)
+        }
+
+        content()
+    }
+}
+
+@Preview
+@Composable
+fun RippleSearchingAnimationPreview() {
+    SA.RippleSearchingAnimation()
 }
