@@ -115,7 +115,7 @@ fun RadarSearchAnimationPreview() {
  * @param content 子内容
  */
 @Composable
-fun SA.RippleSearchingAnimation(
+fun SA.RippleSearchAnimation(
     modifier: Modifier = Modifier.size(150.dp),
     color: Color = Color.Cyan,
     targetColor: Color = Color.Transparent,
@@ -202,5 +202,5 @@ fun SA.RippleSearchingAnimation(
 @Preview
 @Composable
 fun RippleSearchingAnimationPreview() {
-    SA.RippleSearchingAnimation()
+    SA.RippleSearchAnimation()
 }

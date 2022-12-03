@@ -28,9 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.lie.composeanimationkit.animation.RadarSearchAnimation
-import com.lie.composeanimationkit.animation.RippleSearchingAnimation
-import com.lie.composeanimationkit.ui.theme.ComposeAnimationKitTheme
+import com.lie.composeanimationkit.animation.RippleSearchAnimation
 import com.lie.composeanimationkit.animation.RotationAnimation
+import com.lie.composeanimationkit.ui.theme.ComposeAnimationKitTheme
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalFoundationApi::class)
@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         item {
                             BorderBox {
-                                AnimationKit.SearchAnimation.RippleSearchingAnimation()
+                                AnimationKit.SearchAnimation.RippleSearchAnimation()
                             }
                         }
                         item {
