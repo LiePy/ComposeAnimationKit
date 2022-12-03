@@ -110,15 +110,16 @@ fun RadarSearchAnimationPreview() {
  * @param modifier 修饰符，最好在这里定义你要的size
  * @param color 初始中心的颜色
  * @param targetColor 散开时的颜色
+ * @param size 涟漪最大的时候的size，单位是px，可能需要与本组件的大小不同
  * @param duration 从中间到最开的时间
  * @param content 子内容
  */
 @Composable
 fun SA.RippleSearchingAnimation(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.size(150.dp),
     color: Color = Color.Cyan,
     targetColor: Color = Color.Transparent,
-    size: Float = 800f,
+    size: Float = 250f,
     duration: Int = 3000,
     content: @Composable BoxScope.() -> Unit = {},
 ) {
@@ -127,15 +128,6 @@ fun SA.RippleSearchingAnimation(
     val color1 by infiniteTransition.animateColor(
         initialValue = color,
         targetValue = targetColor,
-        animationSpec = infiniteRepeatable(
-            animation = tween(duration, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart,
-            initialStartOffset = StartOffset(0)
-        )
-    )
-    val alpha1 by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 0.5f,
         animationSpec = infiniteRepeatable(
             animation = tween(duration, easing = LinearEasing),
             repeatMode = RepeatMode.Restart,
@@ -161,15 +153,6 @@ fun SA.RippleSearchingAnimation(
             initialStartOffset = StartOffset(1000)
         )
     )
-    val alpha2 by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 0.5f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(duration, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart,
-            initialStartOffset = StartOffset(1000)
-        )
-    )
     val size2 by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = size,
@@ -189,15 +172,6 @@ fun SA.RippleSearchingAnimation(
             initialStartOffset = StartOffset(2000)
         )
     )
-    val alpha3 by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 0.5f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(duration, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart,
-            initialStartOffset = StartOffset(2000)
-        )
-    )
     val size3 by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = size,
@@ -208,17 +182,17 @@ fun SA.RippleSearchingAnimation(
         )
     )
 
-    Box(modifier = modifier.size(size.dp), contentAlignment = Alignment.Center) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Canvas(modifier = modifier) {
-            drawCircle(color1, radius = size1, alpha = alpha1)
+            drawCircle(color1, radius = size1)
         }
 
         Canvas(modifier = modifier) {
-            drawCircle(color2, radius = size2, alpha = alpha2)
+            drawCircle(color2, radius = size2)
         }
 
         Canvas(modifier = modifier) {
-            drawCircle(color3, radius = size3, alpha = alpha3)
+            drawCircle(color3, radius = size3)
         }
 
         content()

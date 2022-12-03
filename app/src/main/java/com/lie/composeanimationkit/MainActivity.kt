@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         item {
                             BorderBox {
-                                AnimationKit.SearchAnimation.RippleSearchingAnimation(size = 150f)
+                                AnimationKit.SearchAnimation.RippleSearchingAnimation()
                             }
                         }
                         item {
@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
                         }
                         item {
                             BorderBox {
-                                AnimationKit.SearchAnimation.RippleSearchingAnimation(size = 150f)
+                                AnimationKit.SearchAnimation.RippleSearchingAnimation()
                             }
                         }
                         item {
@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                         }
                         item {
                             BorderBox {
-                                AnimationKit.SearchAnimation.RippleSearchingAnimation(size = 150f)
+                                AnimationKit.SearchAnimation.RippleSearchingAnimation()
                             }
                         }
                         item {
