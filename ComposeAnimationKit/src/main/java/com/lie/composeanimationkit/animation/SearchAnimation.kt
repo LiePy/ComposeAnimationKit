@@ -58,10 +58,15 @@ fun SA.RadarSearchAnimation(
         Canvas(modifier = modifier) {
             val realSize = min(size.width, size.height)
 
+            val realR = (realSize - strokeWidth) / 2
+
+            val r1 = realR / 3
+            val r2 = realR * 2 / 3
+
             //三个圆圈
-            drawCircle(color, realSize / 6, style = Stroke(strokeWidth))
-            drawCircle(color, realSize * 2 / 6, style = Stroke(strokeWidth))
-            drawCircle(color, realSize / 2, style = Stroke(strokeWidth))
+            drawCircle(color, r1, style = Stroke(strokeWidth))
+            drawCircle(color, r2, style = Stroke(strokeWidth))
+            drawCircle(color, realR, style = Stroke(strokeWidth))
 
             //十字坐标系
             drawLine(
@@ -102,7 +107,7 @@ fun RadarSearchAnimationPreview() {
 
 /**
  * 搜索动画，可内嵌子组件，但是注意是在BoxScope中，且默认的Alignment是居中
- * @param modifier 修饰符
+ * @param modifier 修饰符，最好在这里定义你要的size
  * @param color 初始中心的颜色
  * @param targetColor 散开时的颜色
  * @param duration 从中间到最开的时间
@@ -203,7 +208,7 @@ fun SA.RippleSearchingAnimation(
         )
     )
 
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+    Box(modifier = modifier.size(size.dp), contentAlignment = Alignment.Center) {
         Canvas(modifier = modifier) {
             drawCircle(color1, radius = size1, alpha = alpha1)
         }
