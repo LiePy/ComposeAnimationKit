@@ -1,3 +1,19 @@
+/*
+ 该文件配置了自动打包生成aar并自动发布至maven远程仓库功能
+ 使用方法：
+    Gradle
+     -> ComposeAnimationKit
+        -> Tasks
+            -> publishing
+                -> publishAarPomPublicationToSnapshotsRepository
+
+    然后在 https://s01.oss.sonatype.org/ 中审核
+    审核流程：
+        close -> release ->
+
+ */
+
+
 // 必备插件
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
@@ -7,7 +23,7 @@ def GROUP_ID = 'io.github.LiePy'
 // 名称
 def ARTIFACT_ID = 'ComposeAnimationKit'
 // 版本
-def VERSION_NAME = '1.0.4'
+def VERSION_NAME = '1.1.0'
 // 下面是介绍是别人在MavenCentral仓库搜索到你可以看到的消息
 def DESCRIPTION = '一个简化compose动画开发的库'
 def GIT_LOCATION = 'github.com/LiePy/ComposeAnimationKit'
