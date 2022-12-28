@@ -13,6 +13,7 @@ import android.util.Size
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
@@ -92,25 +93,30 @@ fun LA.LoadingButton(
         animationSpec = tween(durationMillis, 0, LinearEasing)
     )
 
+    Box(modifier,
+        contentAlignment = Alignment.Center) {
+        Box(
+            modifier = modifier
+                .size(buttonState.width.dp, buttonState.height.dp)
+                .clip(RoundedCornerShape(100.dp))
+                .clickable { stateIndex++ }
+                .background(bgColor)
+                .border(4.dp, Color(0xBBE4E4E4), RoundedCornerShape(100.dp)),
 
-    Box(
-        modifier = Modifier
-            .size(buttonState.width.dp, buttonState.height.dp)
-            .clip(RoundedCornerShape(100.dp))
-            .clickable { stateIndex++ }
-            .background(bgColor),
-        contentAlignment = Alignment.Center
-    ) {
+        )
+
         Text(text = "Upload", modifier = Modifier.alpha(contentAlpha.content1))
 
-        CircularProgressIndicator(modifier = Modifier.alpha(contentAlpha.content2))
+        CircularProgressIndicator(modifier = Modifier
+            .alpha(contentAlpha.content2)
+            .size(sizeMin.dp))
 
         Icon(
             imageVector = Icons.Default.Check, contentDescription = null,
             modifier = Modifier.alpha(contentAlpha.content3)
         )
-
     }
+
 
 }
 
