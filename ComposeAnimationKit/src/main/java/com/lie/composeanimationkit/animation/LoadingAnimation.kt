@@ -59,7 +59,13 @@ fun LA.RotationAnimation(
 }
 
 /**
- *
+ *  排水动画
+ *  @param modifier 修饰器
+ *  @param animColor 水波颜色
+ *  @param waveWidth 水波波长
+ *  @param waveHeight 水波波幅
+ *  @param durationMillis_Y 排水时间
+ *  @param durationMillis_X 水波周期时长
  */
 @Composable
 fun LA.WaterWaveAnimation(
@@ -112,6 +118,7 @@ fun LA.WaterWaveAnimation(
                 val halfWaveWidth = waveWidth / 2
                 path.moveTo(-waveWidth + (waveWidth * waveDxAnim), 0f)
 
+                //画二阶贝塞尔曲线
                 for (i in -waveWidth..(size.width.toInt() + waveWidth) step waveWidth) {
                     path.relativeQuadraticBezierTo(
                         halfWaveWidth.toFloat() / 2,
