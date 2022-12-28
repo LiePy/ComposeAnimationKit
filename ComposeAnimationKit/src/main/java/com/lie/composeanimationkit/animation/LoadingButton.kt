@@ -10,7 +10,6 @@
 package com.lie.composeanimationkit.animation
 
 import android.util.Size
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -31,15 +30,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lie.composeanimationkit.utils.view.CircularProgressIndicator
+import kotlin.math.min
 
 
 @Composable
-fun LA.LoadingButton() {
+fun LA.LoadingButton(
+    modifier: Modifier = Modifier,
+    colors: LoadingButtonColors = defaultLoadingButtonColors,
+    size: Size = Size(120, 58),
+    durationMillis: Int = 300
+) {
     var stateIndex by remember { mutableStateOf(0) }
 
-    val buttonState1 = ButtonState(Size(120, 48))
-    val buttonState2 = ButtonState(Size(48, 48))
-    val buttonState3 = ButtonState(Size(120, 48))
+    val sizeMin = min(size.height, size.width)
+    val buttonSize2 = Size(sizeMin, sizeMin)
 
     val contentAlpha1 = ContentAlpha(1f, 0f, 0f)
     val contentAlpha2 = ContentAlpha(0f, 1f, 0f)
@@ -47,21 +51,17 @@ fun LA.LoadingButton() {
 
     val buttonState by animateValueAsState(
         targetValue = when (stateIndex % 3) {
-            0 -> buttonState1
-            1 -> buttonState2
-            else -> buttonState3
-        }, typeConverter = TwoWayConverter(convertToVector = { bs ->
+            1 -> buttonSize2
+            else -> size
+        }, typeConverter = TwoWayConverter(convertToVector = { bs: Size ->
             AnimationVector2D(
-                bs.size.width.toFloat(),
-                bs.size.height.toFloat()
+                bs.width.toFloat(),
+                bs.height.toFloat()
             )
-
         }, convertFromVector = { vector: AnimationVector2D ->
-            ButtonState(
-                Size(vector.v1.toInt(), vector.v2.toInt()),
-            )
+            Size(vector.v1.toInt(), vector.v2.toInt())
         }),
-        animationSpec = tween(3000, 0, LinearEasing)
+        animationSpec = tween(durationMillis, 0, LinearEasing)
     )
 
 
@@ -80,7 +80,7 @@ fun LA.LoadingButton() {
         }, convertFromVector = { vector: AnimationVector3D ->
             ContentAlpha(vector.v1, vector.v2, vector.v3)
         }),
-        animationSpec = tween(3000, 0, LinearEasing)
+        animationSpec = tween(durationMillis, 0, LinearEasing)
     )
 
     val bgColor by animateColorAsState(
@@ -89,13 +89,13 @@ fun LA.LoadingButton() {
             1 -> Color.Yellow
             else -> Color.Green
         },
-        animationSpec = tween(3000, 0, LinearEasing)
+        animationSpec = tween(durationMillis, 0, LinearEasing)
     )
 
 
     Box(
         modifier = Modifier
-            .size(buttonState.size.width.dp, buttonState.size.height.dp)
+            .size(buttonState.width.dp, buttonState.height.dp)
             .clip(RoundedCornerShape(100.dp))
             .clickable { stateIndex++ }
             .background(bgColor),
@@ -120,14 +120,23 @@ fun LoadingButtonPreview() {
     LA.LoadingButton()
 }
 
-//按钮状态
-data class ButtonState(
-    val size: Size,
-)
-
 //主要内容的透明度
 data class ContentAlpha(
     val content1: Float,
     val content2: Float,
     val content3: Float
 )
+
+data class LoadingButtonColors(
+    val onReadyBackgroundColor: Color = Color.Cyan,
+    val onLoadingBackgroundColor: Color = Color.White,
+    val onSuccessBackGroundColor: Color = Color.Green,
+    val onErrorBackgroundColor: Color = Color.Red,
+    val onReadyContentColor: Color = Color.White,
+    val onLoadingContentColor: Color = Color.Blue,
+    val onSuccessContentColor: Color = Color.White,
+    val onErrorContentColor: Color = Color.White
+)
+
+val defaultLoadingButtonColors = LoadingButtonColors()
+
