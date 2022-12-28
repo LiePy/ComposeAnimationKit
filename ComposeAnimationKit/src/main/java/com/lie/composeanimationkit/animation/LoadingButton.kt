@@ -93,23 +93,35 @@ fun LA.LoadingButton(
         animationSpec = tween(durationMillis, 0, LinearEasing)
     )
 
-    Box(modifier,
-        contentAlignment = Alignment.Center) {
+    val borderWidth by animateDpAsState(
+        targetValue = when (stateIndex % 3) {
+            1 -> 4.dp
+            else -> 0.dp
+        },
+        animationSpec = tween(durationMillis, 0, LinearEasing)
+    )
+
+    Box(
+        modifier,
+        contentAlignment = Alignment.Center
+    ) {
         Box(
             modifier = modifier
                 .size(buttonState.width.dp, buttonState.height.dp)
                 .clip(RoundedCornerShape(100.dp))
                 .clickable { stateIndex++ }
                 .background(bgColor)
-                .border(4.dp, Color(0xBBE4E4E4), RoundedCornerShape(100.dp)),
+                .border(borderWidth, Color(0xBBFFFFFF), RoundedCornerShape(100.dp)),
 
-        )
+            )
 
         Text(text = "Upload", modifier = Modifier.alpha(contentAlpha.content1))
 
-        CircularProgressIndicator(modifier = Modifier
-            .alpha(contentAlpha.content2)
-            .size(sizeMin.dp))
+        CircularProgressIndicator(
+            modifier = Modifier
+                .alpha(contentAlpha.content2)
+                .size(sizeMin.dp)
+        )
 
         Icon(
             imageVector = Icons.Default.Check, contentDescription = null,
