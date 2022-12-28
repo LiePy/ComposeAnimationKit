@@ -27,10 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.lie.composeanimationkit.animation.RadarSearchAnimation
-import com.lie.composeanimationkit.animation.RippleSearchAnimation
-import com.lie.composeanimationkit.animation.RotationAnimation
-import com.lie.composeanimationkit.animation.WaterWaveAnimation
+import com.lie.composeanimationkit.animation.*
 import com.lie.composeanimationkit.ui.theme.ComposeAnimationKitTheme
 
 class MainActivity : ComponentActivity() {
@@ -81,6 +78,13 @@ class MainActivity : ComponentActivity() {
                         item {
                             MyContainer {
                                 AnimationKit.LoadingAnimation.WaterWaveAnimation(modifier = Modifier.fillMaxSize())
+                            }
+                        }
+
+                        //加载按钮
+                        item {
+                            MyContainer {
+                                AnimationKit.LoadingAnimation.LoadingButton()
                             }
                         }
 
