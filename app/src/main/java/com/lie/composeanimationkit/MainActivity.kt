@@ -12,8 +12,8 @@ package com.lie.composeanimationkit
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.lie.composeanimationkit.animation.RadarSearchAnimation
 import com.lie.composeanimationkit.animation.RippleSearchAnimation
 import com.lie.composeanimationkit.animation.RotationAnimation
+import com.lie.composeanimationkit.animation.WaterWaveAnimation
 import com.lie.composeanimationkit.ui.theme.ComposeAnimationKitTheme
 
 class MainActivity : ComponentActivity() {
@@ -43,27 +44,43 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+
                     LazyVerticalGrid(
                         cells = GridCells.Adaptive(150.dp),
                         modifier = Modifier.fillMaxSize()
                     ) {
+                        //涟漪扩散动画
                         item {
-                            BorderBox {
+                            MyContainer {
                                 AnimationKit.SearchAnimation.RippleSearchAnimation()
                             }
                         }
+
+                        //雷达动画
                         item {
-                            BorderBox {
+                            MyContainer {
                                 AnimationKit.SearchAnimation.RadarSearchAnimation()
                             }
                         }
+
+                        //旋转动画
                         item {
-                            BorderBox {
+                            MyContainer {
                                 AnimationKit.LoadingAnimation.RotationAnimation(
-                                    modifier = Modifier.size(150.dp)
+                                    modifier = Modifier.fillMaxSize()
                                 ) {
-                                    Text(text = "I'm Roting~", modifier = Modifier.align(Alignment.Center))
+                                    Text(
+                                        text = "I'm Roting~",
+                                        modifier = Modifier.align(Alignment.Center)
+                                    )
                                 }
+                            }
+                        }
+
+                        //排水动画
+                        item {
+                            MyContainer {
+                                AnimationKit.LoadingAnimation.WaterWaveAnimation(modifier = Modifier.fillMaxSize())
                             }
                         }
 
@@ -76,15 +93,20 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun BorderBox(
-    modifier: Modifier = Modifier,
+fun MyContainer(
+    modifier: Modifier = Modifier.size(150.dp),
     content: @Composable () -> Unit,
 ) {
-    Box(
-        modifier = modifier.border(0.5.dp, Color.Gray),
-        contentAlignment = Alignment.Center
+    Surface(
+        modifier = modifier,
+        border = BorderStroke(1.dp, Color.LightGray)
     )
     {
-        content()
+        Box(
+            modifier = modifier,
+            contentAlignment = Alignment.Center
+        ) {
+            content()
+        }
     }
 }
