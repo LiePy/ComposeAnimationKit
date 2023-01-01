@@ -20,9 +20,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -37,22 +41,39 @@ import kotlin.math.min
 @Composable
 fun LA.LoadingButton(
     modifier: Modifier = Modifier,
+    state: LoadingButtonState = rememberLoadingButtonState(),
     colors: LoadingButtonColors = defaultLoadingButtonColors,
     size: Size = Size(120, 58),
-    durationMillis: Int = 300
+    durationMillis: Int = 300,
+    readyContent: @Composable () -> Unit = {
+        Text(text = "Upload")
+    },
+    successContent: @Composable () -> Unit = {
+        Icon(
+            imageVector = Icons.Default.Check, contentDescription = null
+        )
+    },
+    errorContent: @Composable () -> Unit = {
+        Icon(
+            imageVector = Icons.Default.Delete, contentDescription = null
+        )
+    },
+    onClicked: () -> Unit = {}
 ) {
     var stateIndex by remember { mutableStateOf(0) }
 
     val sizeMin = min(size.height, size.width)
     val buttonSize2 = Size(sizeMin, sizeMin)
 
-    val contentAlpha1 = ContentAlpha(1f, 0f, 0f)
-    val contentAlpha2 = ContentAlpha(0f, 1f, 0f)
-    val contentAlpha3 = ContentAlpha(0f, 0f, 1f)
+    val contentAlpha1 = ContentAlpha(1f, 0f, 0f, 0f)
+    val contentAlpha2 = ContentAlpha(0f, 1f, 0f, 0f)
+    val contentAlpha3 = ContentAlpha(0f, 0f, 1f, 0f)
+    val contentAlpha4 = ContentAlpha(0f, 0f, 0f, 1f)
 
+    //按钮尺寸动画，自定义animate Value
     val buttonState by animateValueAsState(
-        targetValue = when (stateIndex % 3) {
-            1 -> buttonSize2
+        targetValue = when (state.currentState) {
+            LoadingState.Loading -> buttonSize2
             else -> size
         }, typeConverter = TwoWayConverter(convertToVector = { bs: Size ->
             AnimationVector2D(
@@ -65,37 +86,42 @@ fun LA.LoadingButton(
         animationSpec = tween(durationMillis, 0, LinearEasing)
     )
 
-
+    //内容透明度动画，自定义animate Value
     val contentAlpha by animateValueAsState(
-        targetValue = when (stateIndex % 3) {
-            0 -> contentAlpha1
-            1 -> contentAlpha2
-            else -> contentAlpha3
+        targetValue = when (state.currentState) {
+            LoadingState.Ready -> contentAlpha1
+            LoadingState.Loading -> contentAlpha2
+            LoadingState.Success -> contentAlpha3
+            LoadingState.Error -> contentAlpha4
         }, typeConverter = TwoWayConverter(convertToVector = { ca: ContentAlpha ->
-            AnimationVector3D(
+            AnimationVector4D(
                 ca.content1,
                 ca.content2,
-                ca.content3
+                ca.content3,
+                ca.content4
             )
 
-        }, convertFromVector = { vector: AnimationVector3D ->
-            ContentAlpha(vector.v1, vector.v2, vector.v3)
+        }, convertFromVector = { vector: AnimationVector4D ->
+            ContentAlpha(vector.v1, vector.v2, vector.v3, vector.v4)
         }),
         animationSpec = tween(durationMillis, 0, LinearEasing)
     )
 
+    //背景色动画
     val bgColor by animateColorAsState(
-        targetValue = when (stateIndex % 3) {
-            0 -> Color.Cyan
-            1 -> Color.Yellow
-            else -> Color.Green
+        targetValue = when (state.currentState) {
+            LoadingState.Ready -> Color.Cyan
+            LoadingState.Loading -> Color.Yellow
+            LoadingState.Success -> Color.Yellow
+            LoadingState.Error -> Color.Yellow
         },
         animationSpec = tween(durationMillis, 0, LinearEasing)
     )
 
+    //边框动画
     val borderWidth by animateDpAsState(
-        targetValue = when (stateIndex % 3) {
-            1 -> 4.dp
+        targetValue = when (state.currentState) {
+            LoadingState.Loading -> 4.dp
             else -> 0.dp
         },
         animationSpec = tween(durationMillis, 0, LinearEasing)
@@ -109,24 +135,37 @@ fun LA.LoadingButton(
             modifier = modifier
                 .size(buttonState.width.dp, buttonState.height.dp)
                 .clip(RoundedCornerShape(100.dp))
-                .clickable { stateIndex++ }
+                .clickable { onClicked() }
                 .background(bgColor)
                 .border(borderWidth, Color(0xBBFFFFFF), RoundedCornerShape(100.dp)),
 
             )
 
-        Text(text = "Upload", modifier = Modifier.alpha(contentAlpha.content1))
+        //初始时显示
+        Box(
+            modifier = Modifier.alpha(contentAlpha.content1),
+            contentAlignment = Alignment.Center
+        ) {
+            readyContent()
+        }
 
+        //加载时显示
         CircularProgressIndicator(
             modifier = Modifier
                 .alpha(contentAlpha.content2)
                 .size(sizeMin.dp)
         )
 
-        Icon(
-            imageVector = Icons.Default.Check, contentDescription = null,
-            modifier = Modifier.alpha(contentAlpha.content3)
-        )
+        //成功时显示
+        Box(modifier = Modifier.alpha(contentAlpha.content3)) {
+            successContent()
+        }
+
+        //错误或失败时显示
+        Box(modifier = Modifier.alpha(contentAlpha.content4)) {
+            errorContent()
+        }
+
     }
 
 
@@ -142,7 +181,8 @@ fun LoadingButtonPreview() {
 data class ContentAlpha(
     val content1: Float,
     val content2: Float,
-    val content3: Float
+    val content3: Float,
+    val content4: Float
 )
 
 data class LoadingButtonColors(
@@ -158,3 +198,40 @@ data class LoadingButtonColors(
 
 val defaultLoadingButtonColors = LoadingButtonColors()
 
+@Composable
+fun rememberLoadingButtonState(
+    initialState: LoadingState = LoadingState.Ready,
+): LoadingButtonState = rememberSaveable(saver = LoadingButtonState.Saver) {
+    LoadingButtonState(initialState)
+}
+
+
+class LoadingButtonState(val currentState: LoadingState = LoadingState.Ready) {
+
+    companion object {
+        /**
+         * The default [Saver] implementation for [PagerState].
+         */
+        val Saver: Saver<LoadingButtonState, *> = listSaver(
+            save = {
+                listOf<Any>(
+                    it.currentState,
+                )
+            },
+            restore = {
+                LoadingButtonState(
+                    currentState = it[0] as LoadingState,
+                )
+            }
+        )
+    }
+}
+
+
+sealed class LoadingState {
+    object Ready : LoadingState()
+    object Loading : LoadingState()
+    object Success : LoadingState()
+    object Error : LoadingState()
+
+}
