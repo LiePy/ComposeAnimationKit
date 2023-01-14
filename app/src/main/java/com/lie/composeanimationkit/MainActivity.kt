@@ -23,12 +23,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lie.composeanimationkit.animation.*
 import com.lie.composeanimationkit.ui.theme.ComposeAnimationKitTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalFoundationApi::class)
@@ -41,62 +45,79 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
-                    LazyVerticalGrid(
-                        cells = GridCells.Adaptive(150.dp),
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        //涟漪扩散动画
-                        item {
-                            MyContainer {
-                                AnimationKit.SearchAnimation.RippleSearchAnimation()
-                            }
-                        }
-
-                        //雷达动画
-                        item {
-                            MyContainer {
-                                AnimationKit.SearchAnimation.RadarSearchAnimation()
-                            }
-                        }
-
-                        //旋转动画
-                        item {
-                            MyContainer {
-                                AnimationKit.LoadingAnimation.RotationAnimation(
-                                    modifier = Modifier.fillMaxSize()
-                                ) {
-                                    Text(
-                                        text = "I'm Roting~",
-                                        modifier = Modifier.align(Alignment.Center)
-                                    )
-                                }
-                            }
-                        }
-
-                        //排水动画
-                        item {
-                            MyContainer {
-                                AnimationKit.LoadingAnimation.WaterWaveAnimation(modifier = Modifier.fillMaxSize())
-                            }
-                        }
-
-                        //加载按钮
-                        item {
-                            MyContainer {
-                                val state = rememberLoadingButtonState()
-
-                                AnimationKit.LoadingAnimation.LoadingButton(state = state) {
-                                    state.nextState(true)
-                                }
-                            }
-                        }
-
-
-                    }
+                   MainView()
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun MainView() {
+    LazyVerticalGrid(
+        cells = GridCells.Adaptive(150.dp),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        //涟漪扩散动画
+        item {
+            MyContainer {
+                AnimationKit.SearchAnimation.RippleSearchAnimation()
+            }
+        }
+
+        //雷达动画
+        item {
+            MyContainer {
+                AnimationKit.SearchAnimation.RadarSearchAnimation()
+            }
+        }
+
+        //旋转动画
+        item {
+            MyContainer {
+                AnimationKit.LoadingAnimation.RotationAnimation(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Text(
+                        text = "I'm Roting~",
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
+        }
+
+        //排水动画
+        item {
+            MyContainer {
+                AnimationKit.LoadingAnimation.WaterWaveAnimation(modifier = Modifier.fillMaxSize())
+            }
+        }
+
+        //加载按钮
+        item {
+            MyContainer {
+                val state = rememberLoadingButtonState()
+
+                AnimationKit.LoadingAnimation.LoadingButton(state = state) {
+                    state.nextState(true)
+                }
+
+                LaunchedEffect(key1 = null, block = {
+                    launch {
+                        var success = true
+                        while (true) {
+                            delay(3000)
+                            state.nextState(success)
+                            success = !success
+                        }
+                    }
+                })
+
+            }
+        }
+
+
     }
 }
 
@@ -117,4 +138,10 @@ fun MyContainer(
             content()
         }
     }
+}
+
+@Preview
+@Composable
+fun MainViewPreview() {
+    MainView()
 }
