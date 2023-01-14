@@ -1,6 +1,7 @@
 /*
  该文件配置了自动打包生成aar并自动发布至maven远程仓库功能
  使用方法：
+ 更新下方的VERSION_NAME
     Gradle
      -> ComposeAnimationKit
         -> Tasks

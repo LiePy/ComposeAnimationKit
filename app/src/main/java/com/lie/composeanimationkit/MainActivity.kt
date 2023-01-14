@@ -84,7 +84,11 @@ class MainActivity : ComponentActivity() {
                         //加载按钮
                         item {
                             MyContainer {
-                                AnimationKit.LoadingAnimation.LoadingButton()
+                                val state = rememberLoadingButtonState()
+
+                                AnimationKit.LoadingAnimation.LoadingButton(state = state) {
+                                    state.nextState(true)
+                                }
                             }
                         }
 

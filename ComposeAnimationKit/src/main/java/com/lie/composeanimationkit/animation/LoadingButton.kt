@@ -211,7 +211,9 @@ fun rememberLoadingButtonState(
 }
 
 
-class LoadingButtonState(val currentState: LoadingState = LoadingState.Ready) {
+class LoadingButtonState(currentState: LoadingState = LoadingState.Ready) {
+
+    private var _currentState by mutableStateOf(currentState)
 
     companion object {
         /**
@@ -229,6 +231,34 @@ class LoadingButtonState(val currentState: LoadingState = LoadingState.Ready) {
                 )
             }
         )
+    }
+
+    var currentState: LoadingState
+        get() = _currentState
+        internal set(value) {
+            if (value != _currentState) {
+                _currentState = value
+            }
+        }
+
+    fun changeToState(newState: LoadingState) {
+        _currentState = newState
+    }
+
+    fun nextState(isSuccess: Boolean) {
+        if (isSuccess) {
+            _currentState = when (_currentState) {
+                is LoadingState.Ready -> LoadingState.Loading
+                is LoadingState.Loading -> LoadingState.Success
+                else -> LoadingState.Ready
+            }
+        } else {
+            _currentState = when (_currentState) {
+                is LoadingState.Ready -> LoadingState.Loading
+                is LoadingState.Loading -> LoadingState.Error
+                else -> LoadingState.Ready
+            }
+        }
     }
 }
 
