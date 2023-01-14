@@ -24,7 +24,7 @@ def GROUP_ID = 'io.github.LiePy'
 // 名称
 def ARTIFACT_ID = 'ComposeAnimationKit'
 // 版本
-def VERSION_NAME = '1.1.0'
+def VERSION_NAME = '1.1.1'
 // 下面是介绍是别人在MavenCentral仓库搜索到你可以看到的消息
 def DESCRIPTION = '一个简化compose动画开发的库'
 def GIT_LOCATION = 'github.com/LiePy/ComposeAnimationKit'

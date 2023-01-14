@@ -10,6 +10,8 @@
 
 # 动画示例：
 
+<img src="https://gitee.com/lie_py/compose-animation-kit-preview/raw/main/SamplePreview/SamplePage2023_1_14.gif"/>
+
 | 预览图                                                                                                                                            | 名称                      |
 |------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------|
 | <img src="https://gitee.com/lie_py/compose-animation-kit-preview/raw/main/SearchAnimation/RadarSearchAnimation.gif" width="48" height="48" />  | [RadarSearchAnimation]  |
@@ -21,7 +23,7 @@
 
 ```groovy
 //历史版本及最新版本请查看：https://s01.oss.sonatype.org/#nexus-search;quick~ComposeAnimationKit
-implementation 'io.github.LiePy:ComposeAnimationKit:1.0.4'  
+implementation 'io.github.LiePy:ComposeAnimationKit:1.1.1'  //最新版本
 ```
 
 ## 二、使用动画
