@@ -99,6 +99,9 @@ fun LA.WaterWaveAnimation(
     // 水位高度，使用低级动画API 和 LaunchedEffect 搭配 key 来实现使用当前实际height
     val waterHeightAnim = remember { Animatable(0f) }
     LaunchedEffect(key1 = canvasSize, block = {
+        if (canvasSize.equals(Size.Unspecified)) {
+            return@LaunchedEffect
+        }
         waterHeightAnim.animateTo(
             canvasSize.height,
             initialVelocity = 0f,

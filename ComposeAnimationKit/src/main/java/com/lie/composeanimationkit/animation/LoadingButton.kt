@@ -37,7 +37,11 @@ import androidx.compose.ui.unit.dp
 import com.lie.composeanimationkit.utils.view.CircularProgressIndicator
 import kotlin.math.min
 
-
+/**
+ * @desc 带加载状态的按钮
+ * @author LiePy
+ * @date 2023/1/14
+ */
 @Composable
 fun LA.LoadingButton(
     modifier: Modifier = Modifier,
@@ -46,21 +50,22 @@ fun LA.LoadingButton(
     size: Size = Size(120, 58),
     durationMillis: Int = 300,
     readyContent: @Composable () -> Unit = {
-        Text(text = "Upload")
+        Text(text = "Upload", color = colors.onReadyContentColor)
     },
     successContent: @Composable () -> Unit = {
         Icon(
-            imageVector = Icons.Default.Check, contentDescription = null
+            imageVector = Icons.Default.Check, contentDescription = null,
+            tint = colors.onSuccessContentColor
         )
     },
     errorContent: @Composable () -> Unit = {
         Icon(
-            imageVector = Icons.Default.Delete, contentDescription = null
+            imageVector = Icons.Default.Delete, contentDescription = null,
+            tint = colors.onErrorContentColor
         )
     },
     onClicked: () -> Unit = {}
 ) {
-    var stateIndex by remember { mutableStateOf(0) }
 
     val sizeMin = min(size.height, size.width)
     val buttonSize2 = Size(sizeMin, sizeMin)
@@ -110,10 +115,10 @@ fun LA.LoadingButton(
     //背景色动画
     val bgColor by animateColorAsState(
         targetValue = when (state.currentState) {
-            LoadingState.Ready -> Color.Cyan
-            LoadingState.Loading -> Color.Yellow
-            LoadingState.Success -> Color.Yellow
-            LoadingState.Error -> Color.Yellow
+            LoadingState.Ready -> colors.onReadyBackgroundColor
+            LoadingState.Loading -> colors.onLoadingBackgroundColor
+            LoadingState.Success -> colors.onSuccessBackGroundColor
+            LoadingState.Error -> colors.onErrorBackgroundColor
         },
         animationSpec = tween(durationMillis, 0, LinearEasing)
     )
@@ -215,12 +220,12 @@ class LoadingButtonState(val currentState: LoadingState = LoadingState.Ready) {
         val Saver: Saver<LoadingButtonState, *> = listSaver(
             save = {
                 listOf<Any>(
-                    it.currentState,
+                    it.currentState.code,
                 )
             },
             restore = {
                 LoadingButtonState(
-                    currentState = it[0] as LoadingState,
+                    currentState = LoadingState.getState(it[0] as Int),
                 )
             }
         )
@@ -228,10 +233,20 @@ class LoadingButtonState(val currentState: LoadingState = LoadingState.Ready) {
 }
 
 
-sealed class LoadingState {
-    object Ready : LoadingState()
-    object Loading : LoadingState()
-    object Success : LoadingState()
-    object Error : LoadingState()
+sealed class LoadingState(val code: Int) {
+    object Ready : LoadingState(0)
+    object Loading : LoadingState(1)
+    object Success : LoadingState(2)
+    object Error : LoadingState(3)
 
+    companion object {
+        fun getState(code: Int): LoadingState {
+            return when (code) {
+                0 -> Ready
+                1 -> Loading
+                2 -> Success
+                else -> Error
+            }
+        }
+    }
 }
