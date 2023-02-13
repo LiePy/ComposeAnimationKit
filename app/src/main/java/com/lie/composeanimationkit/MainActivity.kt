@@ -117,6 +117,13 @@ fun MainView() {
             }
         }
 
+        //心跳动画
+        item {
+            MyContainer {
+                HeartBeat()
+            }
+        }
+
 
     }
 }
