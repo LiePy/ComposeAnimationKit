@@ -22,10 +22,12 @@ import kotlin.math.min
 
 /**
  * @desc 爱心跳动
+ * @param modifier 修饰符，需要在此指定大小size
+ * @param color 爱心的颜色
+ * @param duration 跳动一次的周期时长
  * @author LiePy
  * @date 2023/2/13
  */
-
 @Composable
 fun HeartBeat(
     modifier: Modifier = Modifier,

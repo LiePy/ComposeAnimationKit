@@ -42,6 +42,15 @@ import kotlin.math.min
 
 /**
  * @desc 带加载状态的按钮
+ * @param modifier 修饰符
+ * @param state 定义按钮状态，一般使用[rememberLoadingButtonState]创建
+ * @param colors 定义按钮颜色，@see [defaultLoadingButtonColors]
+ * @param size 定义按钮大小
+ * @param durationMillis 动画时长，该值越小动画越快
+ * @param readyContent 初始显示的内容
+ * @param successContent 成功时显示的内容
+ * @param errorContent 失败时显示的内容
+ * @param onClicked 点击事件处理
  * @author LiePy
  * @date 2023/1/14
  */
@@ -67,7 +76,7 @@ fun LA.LoadingButton(
             tint = colors.onErrorContentColor
         )
     },
-    onClicked: () -> Unit = {}
+    onClicked: (LoadingState) -> Unit = {}
 ) {
 
     val sizeMin = min(size.height, size.width)
@@ -143,7 +152,7 @@ fun LA.LoadingButton(
             modifier = modifier
                 .size(buttonState.width.dp, buttonState.height.dp)
                 .clip(RoundedCornerShape(100.dp))
-                .clickable { onClicked() }
+                .clickable { onClicked(state.currentState) }
                 .background(bgColor)
                 .border(borderWidth, Color(0xBBFFFFFF), RoundedCornerShape(100.dp)),
 
@@ -185,7 +194,9 @@ fun LoadingButtonPreview() {
     LA.LoadingButton()
 }
 
-//主要内容的透明度
+/**
+ * 主要内容的透明度
+ */
 data class ContentAlpha(
     val content1: Float,
     val content2: Float,
@@ -193,6 +204,9 @@ data class ContentAlpha(
     val content4: Float
 )
 
+/**
+ * 加载按钮的颜色
+ */
 data class LoadingButtonColors(
     val onReadyBackgroundColor: Color = Color.Cyan,
     val onLoadingBackgroundColor: Color = Color.White,
@@ -204,8 +218,15 @@ data class LoadingButtonColors(
     val onErrorContentColor: Color = Color.White
 )
 
+/**
+ * 默认颜色
+ */
 val defaultLoadingButtonColors = LoadingButtonColors()
 
+/**
+ * 一般使用该方法初始化创建加载按钮状态
+ * @see LoadingButtonState
+ */
 @Composable
 fun rememberLoadingButtonState(
     initialState: LoadingState = LoadingState.Ready,
@@ -213,7 +234,10 @@ fun rememberLoadingButtonState(
     LoadingButtonState(initialState)
 }
 
-
+/**
+ * 加载按钮状态容器
+ * @see rememberLoadingButtonState
+ */
 class LoadingButtonState(currentState: LoadingState = LoadingState.Ready) {
 
     private var _currentState by mutableStateOf(currentState)
@@ -265,7 +289,9 @@ class LoadingButtonState(currentState: LoadingState = LoadingState.Ready) {
     }
 }
 
-
+/**
+ * 加载状态密封类，定义具体的加载状态
+ */
 sealed class LoadingState(val code: Int) {
     object Ready : LoadingState(0)
     object Loading : LoadingState(1)

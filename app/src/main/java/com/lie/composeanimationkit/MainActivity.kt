@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                   MainView()
+                    MainView()
                 }
             }
         }
@@ -99,9 +99,20 @@ fun MainView() {
                 val state = rememberLoadingButtonState()
 
                 AnimationKit.LoadingAnimation.LoadingButton(state = state) {
-                    state.nextState(true)
+                    //点击切换到下一状态
+//                    state.nextState(true)
+
+                    //一般使用以下用法，根据具体当前状态来分发点击事件
+                    when (it) {
+                        is LoadingState.Ready ->
+                            state.changeToState(LoadingState.Loading)
+                        is LoadingState.Loading ->
+                            state.changeToState(LoadingState.Success)
+                        else -> state.changeToState(LoadingState.Ready)
+                    }
                 }
 
+                //这里是为了展示切换效果，使其自动切换
                 LaunchedEffect(key1 = null, block = {
                     launch {
                         var success = true
@@ -120,6 +131,13 @@ fun MainView() {
         item {
             MyContainer {
                 HeartBeat(modifier = Modifier.fillMaxSize())
+            }
+        }
+
+        //吃豆豆动画
+        item {
+            MyContainer {
+                EatBeanPre()
             }
         }
 
