@@ -141,6 +141,13 @@ fun MainView() {
             }
         }
 
+        //多竖线规律伸缩动画
+        item {
+            MyContainer {
+                MultipleLinesAnimationPre()
+            }
+        }
+
 
     }
 }
