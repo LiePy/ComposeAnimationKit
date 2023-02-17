@@ -35,7 +35,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalFoundationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -62,14 +61,14 @@ fun MainView() {
         //涟漪扩散动画
         item {
             MyContainer {
-                AnimationKit.SearchAnimation.RippleSearchAnimation()
+                AnimationKit.SearchAnimation.RippleSearchAnimation(modifier = Modifier.fillMaxSize())
             }
         }
 
         //雷达动画
         item {
             MyContainer {
-                AnimationKit.SearchAnimation.RadarSearchAnimation()
+                AnimationKit.SearchAnimation.RadarSearchAnimation(modifier = Modifier.fillMaxSize())
             }
         }
 
@@ -120,7 +119,7 @@ fun MainView() {
         //心跳动画
         item {
             MyContainer {
-                HeartBeat()
+                HeartBeat(modifier = Modifier.fillMaxSize())
             }
         }
 
@@ -130,16 +129,16 @@ fun MainView() {
 
 @Composable
 fun MyContainer(
-    modifier: Modifier = Modifier.size(150.dp),
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     Surface(
-        modifier = modifier,
+        modifier = modifier.size(150.dp),
         border = BorderStroke(1.dp, Color.LightGray)
     )
     {
         Box(
-            modifier = modifier,
+            modifier = modifier.size(150.dp),
             contentAlignment = Alignment.Center
         ) {
             content()

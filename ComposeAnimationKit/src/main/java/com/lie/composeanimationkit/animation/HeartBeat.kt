@@ -28,7 +28,7 @@ import kotlin.math.min
 
 @Composable
 fun HeartBeat(
-    modifier: Modifier = Modifier.fillMaxSize(),
+    modifier: Modifier = Modifier,
     color: Color = Color.Red,
     duration: Int = 600
 ) {
@@ -81,12 +81,12 @@ fun HeartBeat(
             minSize * 3 / 8, minSize * 3 / 8,
             minSize / 2, minSize * 3 / 4
         )
-        drawPath(path, color, alpha = alpha)
+        drawPath(path, color, alpha)
     }
 }
 
 @Preview
 @Composable
 fun HeartBeatPre() {
-    HeartBeat()
+    HeartBeat(modifier = Modifier.fillMaxSize())
 }

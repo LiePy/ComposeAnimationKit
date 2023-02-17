@@ -23,7 +23,7 @@
 
 ```groovy
 //历史版本及最新版本请查看：https://s01.oss.sonatype.org/#nexus-search;quick~ComposeAnimationKit
-implementation 'io.github.LiePy:ComposeAnimationKit:1.1.1'  //最新版本
+implementation 'io.github.LiePy:ComposeAnimationKit:1.1.2'  //最新版本
 ```
 
 ## 二、使用动画

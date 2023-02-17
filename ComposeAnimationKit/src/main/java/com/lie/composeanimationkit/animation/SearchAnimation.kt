@@ -39,7 +39,7 @@ typealias SA = AnimationKit.SearchAnimation
  */
 @Composable
 fun SA.RadarSearchAnimation(
-    modifier: Modifier = Modifier.size(150.dp),
+    modifier: Modifier = Modifier,
     color: Color = Color.Green,
     strokeWidth: Float = 10f,
 ) {
@@ -102,7 +102,7 @@ fun SA.RadarSearchAnimation(
 @Preview
 @Composable
 fun RadarSearchAnimationPreview() {
-    SA.RadarSearchAnimation()
+    SA.RadarSearchAnimation(Modifier.size(150.dp))
 }
 
 /**
@@ -116,7 +116,7 @@ fun RadarSearchAnimationPreview() {
  */
 @Composable
 fun SA.RippleSearchAnimation(
-    modifier: Modifier = Modifier.size(150.dp),
+    modifier: Modifier = Modifier,
     color: Color = Color.Cyan,
     targetColor: Color = Color.Transparent,
     size: Float = 250f,
@@ -202,5 +202,5 @@ fun SA.RippleSearchAnimation(
 @Preview
 @Composable
 fun RippleSearchingAnimationPreview() {
-    SA.RippleSearchAnimation()
+    SA.RippleSearchAnimation(Modifier.size(150.dp))
 }

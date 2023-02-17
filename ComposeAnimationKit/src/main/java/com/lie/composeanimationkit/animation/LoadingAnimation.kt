@@ -69,7 +69,7 @@ fun LA.RotationAnimation(
  */
 @Composable
 fun LA.WaterWaveAnimation(
-    modifier: Modifier = Modifier.fillMaxSize(),
+    modifier: Modifier = Modifier,
     animColor: Color = Color.Blue,
     waveWidth: Int = 150,
     waveHeight: Int = 150,
@@ -148,5 +148,5 @@ fun LA.WaterWaveAnimation(
 @Preview
 @Composable
 fun WaterWavePreview() {
-    LA.WaterWaveAnimation()
+    LA.WaterWaveAnimation(Modifier.fillMaxSize())
 }
