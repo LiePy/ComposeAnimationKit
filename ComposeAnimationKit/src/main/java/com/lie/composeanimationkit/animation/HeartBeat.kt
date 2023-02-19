@@ -68,7 +68,7 @@ fun LA.HeartBeat(
         )
         path.relativeCubicTo(
             0f, minSize / 3,
-            -minSize * 3 / 8, minSize * 3 / 8,
+            -minSize * 0.375f, minSize * 0.375f,
             -minSize / 2, minSize * 3 / 4
         )
 
@@ -81,7 +81,7 @@ fun LA.HeartBeat(
         )
         path.relativeCubicTo(
             0f, minSize / 3,
-            minSize * 3 / 8, minSize * 3 / 8,
+            minSize * 0.375f, minSize * 0.375f,
             minSize / 2, minSize * 3 / 4
         )
         drawPath(path, color, alpha)
