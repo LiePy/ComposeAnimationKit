@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.lie.composeanimationkit.AnimationKit
 
 /**
  * @desc 多竖线规律伸缩动画
@@ -30,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
  * @date 2023/2/18
  */
 @Composable
-fun MultipleLinesAnimation(
+fun LA.MultipleLinesAnimation(
     modifier: Modifier,
     color: Color = Color.Cyan,
     strokeWidth: Float = 5f,
@@ -104,6 +105,6 @@ private fun InfiniteTransition.getDy(
 
 @Preview
 @Composable
-fun MultipleLinesAnimationPre() {
-    MultipleLinesAnimation(modifier = Modifier.fillMaxSize())
+fun MultipleLinesAnimationPreview() {
+    AnimationKit.LoadingAnimation.MultipleLinesAnimation(modifier = Modifier.fillMaxSize())
 }

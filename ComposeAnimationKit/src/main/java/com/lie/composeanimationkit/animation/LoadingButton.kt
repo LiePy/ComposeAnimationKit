@@ -23,13 +23,10 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -37,7 +34,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.lie.composeanimationkit.AnimationKit
 import com.lie.composeanimationkit.utils.view.CircularProgressIndicator
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.min
 
 /**
@@ -52,7 +52,7 @@ import kotlin.math.min
  * @param errorContent 失败时显示的内容
  * @param onClicked 点击事件处理
  * @author LiePy
- * @date 2023/1/14
+ * @date 2022/12/28
  */
 @Composable
 fun LA.LoadingButton(
@@ -188,12 +188,6 @@ fun LA.LoadingButton(
 
 }
 
-@Preview
-@Composable
-fun LoadingButtonPreview() {
-    LA.LoadingButton()
-}
-
 /**
  * 主要内容的透明度
  */
@@ -308,4 +302,36 @@ sealed class LoadingState(val code: Int) {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun LoadingButtonPreview() {
+    val state = rememberLoadingButtonState()
+
+    AnimationKit.LoadingAnimation.LoadingButton(state = state) {
+        //点击切换到下一状态
+//                    state.nextState(true)
+
+        //一般使用以下用法，根据具体当前状态来分发点击事件
+        when (it) {
+            is LoadingState.Ready ->
+                state.changeToState(LoadingState.Loading)
+            is LoadingState.Loading ->
+                state.changeToState(LoadingState.Success)
+            else -> state.changeToState(LoadingState.Ready)
+        }
+    }
+
+    //这里是为了展示切换效果，使其自动切换
+    LaunchedEffect(key1 = null, block = {
+        launch {
+            var success = true
+            while (true) {
+                delay(3000)
+                state.nextState(success)
+                success = !success
+            }
+        }
+    })
 }

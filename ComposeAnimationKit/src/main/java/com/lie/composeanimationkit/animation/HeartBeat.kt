@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.tooling.preview.Preview
+import com.lie.composeanimationkit.AnimationKit
 import kotlin.math.min
 
 /**
@@ -29,7 +30,7 @@ import kotlin.math.min
  * @date 2023/2/13
  */
 @Composable
-fun HeartBeat(
+fun LA.HeartBeat(
     modifier: Modifier = Modifier,
     color: Color = Color.Red,
     duration: Int = 600
@@ -89,6 +90,6 @@ fun HeartBeat(
 
 @Preview
 @Composable
-fun HeartBeatPre() {
-    HeartBeat(modifier = Modifier.fillMaxSize())
+fun HeartBeatPreview() {
+    AnimationKit.LoadingAnimation.HeartBeat(modifier = Modifier.fillMaxSize())
 }

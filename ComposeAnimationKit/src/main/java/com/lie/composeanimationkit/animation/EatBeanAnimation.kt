@@ -19,6 +19,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.lie.composeanimationkit.AnimationKit
 
 /**
  * @desc 吃豆豆动画
@@ -80,6 +81,6 @@ fun LA.EatBeanAnimation(
 
 @Preview
 @Composable
-fun EatBeanPre() {
-    LA.EatBeanAnimation(modifier = Modifier.fillMaxSize())
+fun EatBeanPreview() {
+    AnimationKit.LoadingAnimation.EatBeanAnimation(modifier = Modifier.fillMaxSize())
 }

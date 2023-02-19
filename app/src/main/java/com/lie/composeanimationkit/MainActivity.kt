@@ -21,9 +21,7 @@ import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,8 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lie.composeanimationkit.animation.*
 import com.lie.composeanimationkit.ui.theme.ComposeAnimationKitTheme
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,94 +55,28 @@ fun MainView() {
         modifier = Modifier.fillMaxSize()
     ) {
         //涟漪扩散动画
-        item {
-            MyContainer {
-                AnimationKit.SearchAnimation.RippleSearchAnimation(modifier = Modifier.fillMaxSize())
-            }
-        }
+        item { MyContainer { RippleSearchingAnimationPreview() } }
 
         //雷达动画
-        item {
-            MyContainer {
-                AnimationKit.SearchAnimation.RadarSearchAnimation(modifier = Modifier.fillMaxSize())
-            }
-        }
+        item { MyContainer { RadarSearchAnimationPreview() } }
 
         //旋转动画
-        item {
-            MyContainer {
-                AnimationKit.LoadingAnimation.RotationAnimation(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text(
-                        text = "I'm Roting~",
-                        modifier = Modifier.align(Alignment.Center)
-                    )
-                }
-            }
-        }
+        item { MyContainer { RotationAnimationPreview() } }
 
         //排水动画
-        item {
-            MyContainer {
-                AnimationKit.LoadingAnimation.WaterWaveAnimation(modifier = Modifier.fillMaxSize())
-            }
-        }
+        item { MyContainer { WaterWavePreview() } }
 
         //加载按钮
-        item {
-            MyContainer {
-                val state = rememberLoadingButtonState()
-
-                AnimationKit.LoadingAnimation.LoadingButton(state = state) {
-                    //点击切换到下一状态
-//                    state.nextState(true)
-
-                    //一般使用以下用法，根据具体当前状态来分发点击事件
-                    when (it) {
-                        is LoadingState.Ready ->
-                            state.changeToState(LoadingState.Loading)
-                        is LoadingState.Loading ->
-                            state.changeToState(LoadingState.Success)
-                        else -> state.changeToState(LoadingState.Ready)
-                    }
-                }
-
-                //这里是为了展示切换效果，使其自动切换
-                LaunchedEffect(key1 = null, block = {
-                    launch {
-                        var success = true
-                        while (true) {
-                            delay(3000)
-                            state.nextState(success)
-                            success = !success
-                        }
-                    }
-                })
-
-            }
-        }
+        item { MyContainer { LoadingButtonPreview() } }
 
         //心跳动画
-        item {
-            MyContainer {
-                HeartBeat(modifier = Modifier.fillMaxSize())
-            }
-        }
+        item { MyContainer { HeartBeatPreview() } }
 
         //吃豆豆动画
-        item {
-            MyContainer {
-                EatBeanPre()
-            }
-        }
+        item { MyContainer { EatBeanPreview() } }
 
         //多竖线规律伸缩动画
-        item {
-            MyContainer {
-                MultipleLinesAnimationPre()
-            }
-        }
+        item { MyContainer { MultipleLinesAnimationPreview() } }
 
 
     }
