@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainView() {
     LazyVerticalGrid(
-        cells = GridCells.Adaptive(150.dp),
+        cells = GridCells.Adaptive(SINGLE_BOX_SIZE.dp),
         modifier = Modifier.fillMaxSize()
     ) {
         //涟漪扩散动画
@@ -103,12 +103,12 @@ fun MyContainer(
     content: @Composable () -> Unit,
 ) {
     Surface(
-        modifier = modifier.size(150.dp),
-        border = BorderStroke(1.dp, Color.LightGray)
+        modifier = modifier.size(SINGLE_BOX_SIZE.dp),
+        border = BorderStroke(0.3.dp, Color.LightGray)
     )
     {
         Box(
-            modifier = modifier.size(150.dp),
+            modifier = modifier.size(SINGLE_BOX_SIZE.dp),
             contentAlignment = Alignment.Center
         ) {
             content()
@@ -121,3 +121,8 @@ fun MyContainer(
 fun MainViewPreview() {
     MainView()
 }
+
+/**
+ * 在此修改页面展示的每个动画的大小尺寸
+ */
+const val SINGLE_BOX_SIZE = 120

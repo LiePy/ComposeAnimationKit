@@ -36,7 +36,7 @@ import com.lie.composeanimationkit.AnimationKit
 @Composable
 fun LA.WaterWaveAnimation(
     modifier: Modifier = Modifier,
-    animColor: Color = Color.Blue,
+    animColor: Color = Color.Cyan,
     waveWidth: Int = 150,
     waveHeight: Int = 150,
     durationMillis_Y: Int = 10000,

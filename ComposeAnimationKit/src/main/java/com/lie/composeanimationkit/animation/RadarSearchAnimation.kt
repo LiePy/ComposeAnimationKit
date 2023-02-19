@@ -36,7 +36,7 @@ import kotlin.math.min
 @Composable
 fun LA.RadarSearchAnimation(
     modifier: Modifier = Modifier,
-    color: Color = Color.Green,
+    color: Color = Color.Cyan,
     strokeWidth: Float = 10f,
 ) {
     //循环动画

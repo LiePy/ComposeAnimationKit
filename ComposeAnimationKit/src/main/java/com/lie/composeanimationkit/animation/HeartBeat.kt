@@ -32,7 +32,7 @@ import kotlin.math.min
 @Composable
 fun LA.HeartBeat(
     modifier: Modifier = Modifier,
-    color: Color = Color.Red,
+    color: Color = Color.Cyan,
     duration: Int = 600
 ) {
     val transition = rememberInfiniteTransition()
