@@ -60,7 +60,7 @@ fun LA.HeartBeat(
 
         val path = Path()
         //右半边爱心
-        path.moveTo(center.x, center.y - minSize / 3)
+        path.moveTo(center.x, center.y - minSize * 0.4f)
         path.relativeCubicTo(
             minSize / 4, -minSize / 4,
             minSize / 2, 0f,
@@ -73,7 +73,7 @@ fun LA.HeartBeat(
         )
 
         //左半边爱心
-        path.moveTo(center.x, center.y - minSize / 3)
+        path.moveTo(center.x, center.y - minSize * 0.4f)
         path.relativeCubicTo(
             -minSize / 4, -minSize / 4,
             -minSize / 2, 0f,
