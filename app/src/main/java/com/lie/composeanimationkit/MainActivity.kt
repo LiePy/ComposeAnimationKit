@@ -90,6 +90,9 @@ fun MainView() {
         //电子加载动画
         item { MyContainer { PositronAnimationPreview() } }
 
+        //折叠和展开方块加载动画
+        item { MyContainer { ExpandShrinkAnimationPreview() } }
+
 
     }
 }
