@@ -78,6 +78,12 @@ fun MainView() {
         //多竖线规律伸缩动画
         item { MyContainer { MultipleLinesAnimationPreview() } }
 
+        //经典三点加载
+        item { MyContainer { ThreePointAnimationPreview() } }
+
+        //九点加载
+        item { MyContainer { NinePointAnimationPreview() } }
+
 
     }
 }
