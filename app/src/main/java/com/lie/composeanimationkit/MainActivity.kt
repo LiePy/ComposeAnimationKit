@@ -13,12 +13,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -29,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lie.composeanimationkit.animation.*
 import com.lie.composeanimationkit.ui.theme.ComposeAnimationKitTheme
+import com.lie.composeanimationkit.view.SpiderWebRadarLineDiagramPreview
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,11 +47,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MainView() {
     LazyVerticalGrid(
-        cells = GridCells.Adaptive(SINGLE_BOX_SIZE.dp),
+        columns = GridCells.Adaptive(SINGLE_BOX_SIZE.dp),
         modifier = Modifier.fillMaxSize()
     ) {
         //涟漪扩散动画
@@ -93,6 +92,8 @@ fun MainView() {
         //折叠和展开方块加载动画
         item { MyContainer { ExpandShrinkAnimationPreview() } }
 
+        //蛛网图
+        item { MyContainer { SpiderWebRadarLineDiagramPreview() } }
 
     }
 }

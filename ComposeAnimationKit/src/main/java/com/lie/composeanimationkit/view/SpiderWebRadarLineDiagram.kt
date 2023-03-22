@@ -103,7 +103,7 @@ fun SpiderWebRadarLineDiagram(
                 coroutineScope.launch {
                     flingRotation.animateDecay(flingStartSpeed, exponentDecay)
                 }
-            }) { change, dragAmount ->
+            }) { _, dragAmount ->
                 endPoint = startPoint + dragAmount
                 //这里Math.atan2函数对正负做了处理，所以不需要分象限处理
                 (atan2(endPoint.y - centerPoint.y, endPoint.x - centerPoint.x) - atan2(
