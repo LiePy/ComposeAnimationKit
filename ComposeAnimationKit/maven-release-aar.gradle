@@ -10,7 +10,9 @@
 
     3. 在 https://s01.oss.sonatype.org/ 中审核
         审核流程：
-            close -> release ->
+            Build Promotion Staging Repositories:
+                close -> release
+            search查看是否发布成功
  */
 
 
