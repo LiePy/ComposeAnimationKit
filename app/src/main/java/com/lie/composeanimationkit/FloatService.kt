@@ -15,38 +15,61 @@ import android.graphics.PixelFormat
 import android.os.IBinder
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class FloatService : Service() {
+    private lateinit var windowManager: WindowManager
+    private val layoutParams: WindowManager.LayoutParams by lazy {
+        buildLayoutParams()
+    }
+
+    private val view by lazy {
+        buildComposeView()
+    }
 
     override fun onBind(intent: Intent): IBinder {
         TODO("Return the communication channel to the service.")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // 要用activity的 windowManager，否则token为null
+        windowManager = MainActivity.instance.windowManager
         openWindow()
-
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun openWindow() {
-        val windowManager = MainActivity.instance.getSystemService(WINDOW_SERVICE) as WindowManager
-        val layoutParams = WindowManager.LayoutParams();
-        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-        layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-//        layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
-//        layoutParams.token = this.getWindow().getDecorView().getWindowToken();  //这样设置，在activity中打开悬浮框可绕过权限；
-        layoutParams.flags =
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-        layoutParams.format = PixelFormat.TRANSLUCENT;  //透明
-        layoutParams.gravity = Gravity.TOP or Gravity.RIGHT;  //右上角显示
+    override fun onDestroy() {
+        super.onDestroy()
+        closeWindow()
+    }
+
+    private fun buildLayoutParams(): WindowManager.LayoutParams {
+        return WindowManager.LayoutParams().apply {
+            height = ViewGroup.LayoutParams.WRAP_CONTENT
+            width = ViewGroup.LayoutParams.WRAP_CONTENT
+            type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+            flags =
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+            format = PixelFormat.TRANSLUCENT  //透明
+            gravity = Gravity.TOP or Gravity.END  //右上角显示
+        }
+    }
+
+    private fun buildComposeView(): View {
         val view = LayoutInflater.from(this).inflate(R.layout.view_win, null).apply {
             // set ViewTreeLifecycleOwner
             ViewTreeLifecycleOwner.set(this@apply, MainActivity.instance)
@@ -61,11 +84,30 @@ class FloatService : Service() {
                 FloatView()
             }
         }
-        windowManager.addView(view, layoutParams);
+        return view
+    }
+
+    private fun openWindow() {
+        windowManager.addView(view, layoutParams)
+    }
+
+    private fun closeWindow() {
+        windowManager.removeView(view)
     }
 }
 
 @Composable
 fun FloatView() {
-    Text(text = "Hello Compose Float!")
+    var countDown by remember { mutableStateOf(0) }
+
+    LaunchedEffect(key1 = Unit, block = {
+        launch {
+            while (true) {
+                delay(1000)
+                countDown++
+            }
+        }
+    })
+
+    Text(text = "Count= $countDown")
 }
