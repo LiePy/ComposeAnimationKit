@@ -44,12 +44,8 @@ import com.lie.composeanimationkit.ui.theme.ComposeAnimationKitTheme
 import com.lie.composeanimationkit.view.SpiderWebRadarLineDiagramPreview
 
 class MainActivity : ComponentActivity() {
-    companion object {
-        lateinit var instance: ComponentActivity
-    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        instance = this@MainActivity
 
         setContent {
             ComposeAnimationKitTheme {

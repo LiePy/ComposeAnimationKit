@@ -65,11 +65,10 @@ class FloatService : Service(), LifecycleOwner, SavedStateRegistryOwner {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // 要用activity的 windowManager，否则token为null
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME)
 
-        windowManager = MainActivity.instance.windowManager
+        windowManager = this.getSystemService(WINDOW_SERVICE) as WindowManager
 
         openWindow()
         return super.onStartCommand(intent, flags, startId)
