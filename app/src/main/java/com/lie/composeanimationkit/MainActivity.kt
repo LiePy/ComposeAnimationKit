@@ -41,6 +41,7 @@ import com.lie.composeanimationkit.animation.RotationAnimationPreview
 import com.lie.composeanimationkit.animation.ThreePointAnimationPreview
 import com.lie.composeanimationkit.animation.WaterWavePreview
 import com.lie.composeanimationkit.ui.theme.ComposeAnimationKitTheme
+import com.lie.composeanimationkit.view.DragRotatablePreview
 import com.lie.composeanimationkit.view.SpiderWebRadarLineDiagramPreview
 
 class MainActivity : ComponentActivity() {
@@ -111,6 +112,9 @@ fun MainView() {
 
         //蛛网图
         item { MyContainer { SpiderWebRadarLineDiagramPreview() } }
+
+        //转盘组件
+        item { MyContainer { DragRotatablePreview() } }
 
     }
 }
