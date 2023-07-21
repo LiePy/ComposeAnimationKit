@@ -95,15 +95,12 @@ class FloatService : Service(), LifecycleOwner, SavedStateRegistryOwner {
 
     private fun buildComposeView(): View {
         val view = LayoutInflater.from(this).inflate(R.layout.view_win, null).apply {
-            // set ViewTreeLifecycleOwner
-            ViewTreeLifecycleOwner.set(this@apply, this@FloatService)
-        }
-        view.findViewById<ComposeView>(R.id.tv_compose).apply {
             // set ViewTreeSavedStateRegistryOwner
             setViewTreeSavedStateRegistryOwner(this@FloatService)
             // set ViewTreeLifecycleOwner
             ViewTreeLifecycleOwner.set(this@apply, this@FloatService)
-
+        }
+        view.findViewById<ComposeView>(R.id.tv_compose).apply {
             setContent {
                 FloatView()
             }
