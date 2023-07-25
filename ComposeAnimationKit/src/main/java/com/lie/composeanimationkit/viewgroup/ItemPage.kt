@@ -15,10 +15,10 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -31,7 +31,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.dp
 import com.lie.composeanimationkit.utils.toDp
 
 /**
@@ -55,20 +54,35 @@ fun ItemPage() {
         val currentItemIndex = remember { mutableStateOf(-1) }
 
         Column {
-            ItemContainer(index = 0, current = currentItemIndex, parentSize = parentSize) {
-                Box(modifier = Modifier
-                    .size(200.dp)
-                    .background(Color.Red))
+            ItemContainer(
+                index = 0, current = currentItemIndex, parentSize = parentSize,
+                itemSize = IntSize(parentSize.width, parentSize.height/3)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(Color.Red)
+                )
             }
-            ItemContainer(index = 1, current = currentItemIndex, parentSize = parentSize) {
-                Box(modifier = Modifier
-                    .size(200.dp)
-                    .background(Color.Green))
+            ItemContainer(
+                index = 1, current = currentItemIndex, parentSize = parentSize,
+                itemSize = IntSize(parentSize.width, parentSize.height/3)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(Color.Green)
+                )
             }
-            ItemContainer(index = 2, current = currentItemIndex, parentSize = parentSize) {
-                Box(modifier = Modifier
-                    .size(200.dp)
-                    .background(Color.Blue))
+            ItemContainer(
+                index = 2, current = currentItemIndex, parentSize = parentSize,
+                itemSize = IntSize(parentSize.width, parentSize.height/3)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(Color.Blue)
+                )
             }
         }
     }
@@ -79,9 +93,9 @@ fun ItemContainer(
     index: Int,
     current: MutableState<Int>,
     parentSize: IntSize,
-    content: @Composable () -> Unit
+    itemSize: IntSize,
+    content: @Composable BoxScope.() -> Unit
 ) {
-    var itemSize by remember { mutableStateOf(IntSize(0, 0)) }
 
     val transition = updateTransition(targetState = index == current.value, label = "")
     val width by transition.animateInt(transitionSpec = { tween(300) }, label = "") {
@@ -103,9 +117,6 @@ fun ItemContainer(
         }
     }
     Box(modifier = Modifier
-        .onSizeChanged {
-            itemSize = it
-        }
         .width(width.toDp())
         .height(height.toDp())
         .clickable {
