@@ -13,9 +13,11 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
@@ -27,6 +29,8 @@ import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.*
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.graphics.toColor
 import kotlinx.coroutines.launch
 import java.lang.Float.min
 import kotlin.math.atan2
@@ -58,7 +62,7 @@ fun TurntableView(
         throw IllegalArgumentException("dataList.size can not be empty,and it must equals to paramList.size!")
     }
     //计算数据长度，用于确定绘制几边形
-    val count = dataList.size
+    val count = layerNum
     //确定最外层代表的数值上限
     val maxData = maxData_ ?: dataList.maxOf { it }
 
@@ -141,8 +145,14 @@ fun TurntableView(
         drawCircle(Color.Black, 7.5f, center)
         rotate(rotation + flingRotation.value) {
             var startAngle = 0f
-            for (i in 0 .. count) {
-                drawArc(Color.Red, startAngle, roteStep, false )
+            for (i in 0 until count) {
+
+                drawArc(
+                    Color.hsv(i*roteStep, 1f, 1f),
+                    startAngle, roteStep, true,
+                    Offset(0f, (size.height - size.width) / 2),
+                    Size(size.width, size.width)
+                )
                 startAngle += roteStep
             }
         }
@@ -324,12 +334,28 @@ private fun DrawScope.calculateXYByRadian(
     return Pair(x, y)
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun SpiderWebRadarLineDiagramPreview() {
-//    SpiderWebRadarLineDiagram(
-//        modifier = Modifier.fillMaxSize(),
-//        dataList = listOf(5f, 3f, 5f, 3f, 5f, 3f, 5f, 3f, 5f, 3f, 5f, 3f, 5f, 3f),
-//        labelList = listOf("美", "德", "美", "德", "美", "德", "美", "德", "美", "德", "美", "德", "美", "德")
-//    )
-//}
+@Preview(showBackground = true)
+@Composable
+fun TurntablePreview() {
+    TurntableView(
+        modifier = Modifier.fillMaxSize(),
+        dataList = listOf(5f, 3f, 5f, 3f, 5f, 3f, 5f, 3f, 5f, 3f, 5f, 3f, 5f, 3f),
+        labelList = listOf(
+            "美",
+            "德",
+            "美",
+            "德",
+            "美",
+            "德",
+            "美",
+            "德",
+            "美",
+            "德",
+            "美",
+            "德",
+            "美",
+            "德"
+        ),
+        layerNum = 100
+    )
+}
