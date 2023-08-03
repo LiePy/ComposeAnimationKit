@@ -58,13 +58,13 @@ fun TurntableView(
     maxData_: Float? = null
 ) {
     //数据长度和标签长度判断处理，若不相等或为空抛出异常
-    if (dataList.size != labelList.size || dataList.isEmpty()) {
-        throw IllegalArgumentException("dataList.size can not be empty,and it must equals to paramList.size!")
-    }
+//    if (dataList.size != labelList.size || dataList.isEmpty()) {
+//        throw IllegalArgumentException("dataList.size can not be empty,and it must equals to paramList.size!")
+//    }
     //计算数据长度，用于确定绘制几边形
     val count = layerNum
     //确定最外层代表的数值上限
-    val maxData = maxData_ ?: dataList.maxOf { it }
+//    val maxData = maxData_ ?: dataList.maxOf { it }
 
     //drawText()绘制文本要用到
     val textMeasurer = rememberTextMeasurer()
@@ -83,7 +83,7 @@ fun TurntableView(
     //手指松开后的惯性旋转角度
     val flingRotation = remember { Animatable(0f) }
     //定义衰减动画的衰减属性，指数衰减、摩擦力和临界值
-    val exponentDecay = exponentialDecay<Float>(0.5f, 1f)
+    val exponentDecay = exponentialDecay<Float>(0.1f, 1f)
     //记录上一次onDrag的时间，用于计算两次onDrag的间隔时间
     var lastOnDragTime by remember { mutableStateOf(0L) }
 
@@ -146,9 +146,8 @@ fun TurntableView(
         rotate(rotation + flingRotation.value) {
             var startAngle = 0f
             for (i in 0 until count) {
-
                 drawArc(
-                    Color.hsv(i*roteStep, 1f, 1f),
+                    Color.hsv(i * roteStep, 1f, 1f),
                     startAngle, roteStep, true,
                     Offset(0f, (size.height - size.width) / 2),
                     Size(size.width, size.width)
@@ -156,6 +155,17 @@ fun TurntableView(
                 startAngle += roteStep
             }
         }
+        drawCircle(Color(0xffeeeeee), size.width/6, center)
+        drawCircle(Color(0xffdddddd), size.width/6, center, 1f, Stroke(9f))
+
+        val path1 = Path()
+        path1.moveTo(size.width * 5 / 12, center.y)
+        path1.lineTo(center.x, center.y - size.height / 8)
+        path1.lineTo(size.width * 7 / 12, center.y)
+        path1.close()
+        drawPath(path1, Color(0xffeeeeee))
+//        drawPath(path1, Color(0xffdddddd), 1f, Stroke(9f))
+
 //        //画标签文本
 //        drawParamLabel(
 //            count, roteStep, radius, textMeasurer, labelList, rotation + flingRotation.value
@@ -339,23 +349,8 @@ private fun DrawScope.calculateXYByRadian(
 fun TurntablePreview() {
     TurntableView(
         modifier = Modifier.fillMaxSize(),
-        dataList = listOf(5f, 3f, 5f, 3f, 5f, 3f, 5f, 3f, 5f, 3f, 5f, 3f, 5f, 3f),
-        labelList = listOf(
-            "美",
-            "德",
-            "美",
-            "德",
-            "美",
-            "德",
-            "美",
-            "德",
-            "美",
-            "德",
-            "美",
-            "德",
-            "美",
-            "德"
-        ),
+        dataList = listOf(),
+        labelList = listOf(),
         layerNum = 100
     )
 }
