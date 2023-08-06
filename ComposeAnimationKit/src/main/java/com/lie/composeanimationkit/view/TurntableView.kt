@@ -30,7 +30,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.*
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.graphics.toColor
 import kotlinx.coroutines.launch
 import java.lang.Float.min
 import kotlin.math.atan2
@@ -52,17 +51,15 @@ import kotlin.math.sin
 @Composable
 fun TurntableView(
     modifier: Modifier,
-    dataList: List<Float>,
     labelList: List<String>,
-    layerNum: Int = 5,
-    maxData_: Float? = null
+    count_: Int? = null
 ) {
     //数据长度和标签长度判断处理，若不相等或为空抛出异常
 //    if (dataList.size != labelList.size || dataList.isEmpty()) {
 //        throw IllegalArgumentException("dataList.size can not be empty,and it must equals to paramList.size!")
 //    }
     //计算数据长度，用于确定绘制几边形
-    val count = layerNum
+    val count = count_ ?: labelList.size
     //确定最外层代表的数值上限
 //    val maxData = maxData_ ?: dataList.maxOf { it }
 
@@ -137,12 +134,14 @@ fun TurntableView(
                 }
             }
         }) {
+        val edge = min(size.height, size.width)
         //计算多边形相接圆的半径
-        val radius = min(size.height, size.width) * 0.45f
+        val radius = edge / 2
+        val myCenter = center
         //计算多边形相邻顶点的圆心角
         val roteStep = 360f / count
         //画中心点
-        drawCircle(Color.Black, 7.5f, center)
+        drawCircle(Color.Black, 7.5f, myCenter)
         rotate(rotation + flingRotation.value) {
             var startAngle = 0f
             for (i in 0 until count) {
@@ -155,13 +154,13 @@ fun TurntableView(
                 startAngle += roteStep
             }
         }
-        drawCircle(Color(0xffeeeeee), size.width/6, center)
-        drawCircle(Color(0xffdddddd), size.width/6, center, 1f, Stroke(9f))
+        drawCircle(Color(0xffeeeeee), size.width/6, myCenter)
+        drawCircle(Color(0xffdddddd), size.width/6, myCenter, 1f, Stroke(9f))
 
         val path1 = Path()
-        path1.moveTo(size.width * 5 / 12, center.y)
-        path1.lineTo(center.x, center.y - size.height / 8)
-        path1.lineTo(size.width * 7 / 12, center.y)
+        path1.moveTo(size.width * 5 / 12, myCenter.y)
+        path1.lineTo(myCenter.x, myCenter.y - size.height / 8)
+        path1.lineTo(size.width * 7 / 12, myCenter.y)
         path1.close()
         drawPath(path1, Color(0xffeeeeee))
 //        drawPath(path1, Color(0xffdddddd), 1f, Stroke(9f))
@@ -173,184 +172,12 @@ fun TurntableView(
     }
 }
 
-/**
- * 绘制多边形顶点
- * @param count 边数，也是顶点数
- * @param roteStep 相邻顶点的圆心角
- * @param radius 相接圆半径
- */
-private fun DrawScope.drawSpiderWebPoints(
-    count: Int, roteStep: Float, radius: Float
-) {
-    val pointsList = mutableListOf<Offset>()
-    (0 until count).forEach {
-        //计算各个顶点坐标
-        val (x, y) = calculateXY(roteStep * it, radius)
-        pointsList.add(Offset(x, y))
-    }
-    drawPoints(
-        pointsList,
-        PointMode.Points,
-        Color.Black,
-        strokeWidth = 15f,
-        pathEffect = PathEffect.cornerPathEffect(15f)
-    )
-}
-
-/**
- * 绘制蛛网
- *
- * @param count 顶点数
- * @param roteStep 相邻顶点与中心点构成的角度
- * @param radius 最外层顶点所在圆的半径
- * @param layerNum 总层数
- */
-private fun DrawScope.drawSpiderWeb(
-    layerNum: Int, count: Int, roteStep: Float, radius: Float
-) {
-    (1..layerNum).forEach {
-        //画每一层网络
-        drawOneLayerCobweb(count, roteStep, radius, it, layerNum)
-    }
-}
-
-/**
- * 绘制蛛网的每一层（多边形）
- *
- * @param count 顶点数
- * @param roteStep 相邻顶点与中心点构成的角度
- * @param radius 最外层顶点所在圆的半径
- * @param currentLayer 当前层数
- * @param layerNum 总层数
- */
-private fun DrawScope.drawOneLayerCobweb(
-    count: Int, roteStep: Float, radius: Float, currentLayer: Int, layerNum: Int
-) {
-    val path = Path()
-    (0 until count).forEach {
-        //计算各个顶点坐标
-        val (x, y) = calculateXY(roteStep * it, radius * currentLayer / layerNum)
-        //是最外层时，画顶点与圆心的连线
-        if (currentLayer == layerNum) {
-            drawLine(Color.Black, Offset(x, y), center)
-        }
-
-        //相邻顶点连线
-        if (it == 0) {
-            path.moveTo(x, y)
-        } else {
-            path.lineTo(x, y)
-        }
-        if (it == count - 1) {
-            path.close()
-        }
-    }
-
-    drawPath(path, Color.Black, style = Stroke())
-}
-
-/**
- * 绘制数据的线
- *
- * @param count 顶点数，即dataList的size
- * @param roteStep 相邻顶点与中心点构成的角度
- * @param dataList 需要绘制的数据列表
- * @param radius 最大圆半径
- * @param maxData_ 数据范围的最大值，即最外层蛛网代表的值
- */
-private fun DrawScope.drawDataLine(
-    count: Int, roteStep: Float, dataList: List<Float>, radius: Float, maxData_: Float
-) {
-    val dataPath = Path()
-    (0 until count).forEach {
-        val (x, y) = calculateXY(roteStep * it, dataList[it] * radius / maxData_)
-        //画数据的各个点
-        drawCircle(Color.Red, 15f, Offset(x, y))
-
-        if (it == 0) {
-            dataPath.moveTo(x, y)
-        } else {
-            dataPath.lineTo(x, y)
-        }
-        if (it == count - 1) {
-            dataPath.close()
-        }
-    }
-    drawPath(dataPath, Color(0xCC9CB8F0), style = Fill)
-}
-
-
-/**
- * 绘制标签文本
- *
- * @param count 顶点数
- * @param roteStep 相邻顶点与中心点构成的角度
- * @param radius 当前层顶点所在圆的半径
- * @param textMeasurer TextMeasure
- * @param labelList 存储标签文本的列表
- * @param rotation 当前蛛网图旋转的角度
- */
-@OptIn(ExperimentalTextApi::class)
-private fun DrawScope.drawParamLabel(
-    count: Int,
-    roteStep: Float,
-    radius: Float,
-    textMeasurer: TextMeasurer,
-    labelList: List<String>,
-    rotation: Float
-) {
-    (0 until count).forEach {
-        //计算文本需要绘制的坐标
-        val (x, y) = calculateXYByRadian(
-            Math.toRadians(roteStep * it.toDouble() + rotation.toDouble()), radius * 1.05f
-        )
-        //计算要绘制的文本的TextLayoutResult
-        val measuredText = textMeasurer.measure(
-            AnnotatedString(labelList[it])
-        )
-        //绘制文本
-        drawText(
-            measuredText,
-            topLeft = Offset(x - measuredText.size.width / 2, y - measuredText.size.height / 2)
-        )
-    }
-}
-
-/**
- * 根据角度计算坐标
- *
- * @param rotation 角度
- * @param radius 半径
- */
-private fun DrawScope.calculateXY(
-    rotation: Float, radius: Float
-): Pair<Float, Float> {
-    //将角度单位转换，如180度转换成Pi
-    val radian = Math.toRadians(rotation.toDouble())
-    return calculateXYByRadian(radian, radius)
-}
-
-/**
- * 根据弧度计算坐标
- *
- * @param radius 半径
- * @param radian 弧度
- */
-private fun DrawScope.calculateXYByRadian(
-    radian: Double, radius: Float
-): Pair<Float, Float> {
-    val x = (radius * cos(radian) + center.x).toFloat()
-    val y = (radius * sin(radian) + center.y).toFloat()
-    return Pair(x, y)
-}
-
 @Preview(showBackground = true)
 @Composable
 fun TurntablePreview() {
     TurntableView(
         modifier = Modifier.fillMaxSize(),
-        dataList = listOf(),
-        labelList = listOf(),
-        layerNum = 100
+        labelList = (0 .. 5).toList().map { it.toString() },
+//        count_ = 360
     )
 }
