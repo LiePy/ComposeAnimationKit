@@ -32,8 +32,10 @@ import androidx.compose.ui.text.*
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
 import java.lang.Float.min
+import java.lang.Math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
+import kotlin.math.roundToInt
 import kotlin.math.sin
 
 /**
@@ -139,8 +141,17 @@ fun TurntableView(
         val myCenter = center
         //计算多边形相邻顶点的圆心角
         val roteStep = 360f / count
-        //画中心点
-        drawCircle(Color.Black, 7.5f, myCenter)
+
+        val marginTop = 100
+
+        // 这里索引的计算需要一点小心思
+        val labelIndex =
+            (((-rotation - flingRotation.value) % 360 / roteStep).roundToInt() + count) % count
+        val measuredText = textMeasurer.measure(
+            AnnotatedString(labelList[labelIndex])
+        )
+        drawText(measuredText, topLeft = Offset(edge / 2, size.height / 2 - radius - marginTop))
+
         rotate(rotation + flingRotation.value) {
             for (i in 0 until count) {
                 rotate(i * roteStep) {
@@ -150,7 +161,7 @@ fun TurntableView(
                     drawArc(
                         Color.hsv(i * roteStep, 1f, 1f),
                         // 这里startAngle必须是270，否则和文本的绘制顺序冲突导致部分文本无法显示,再减一半的step使文本居中
-                        270f- roteStep / 2, roteStep, true,
+                        270f - roteStep / 2, roteStep, true,
                         Offset(0f, (size.height - size.width) / 2),
                         Size(size.width, size.width)
                     )
@@ -158,8 +169,8 @@ fun TurntableView(
                 }
             }
         }
-        drawCircle(Color(0xffeeeeee), size.width/6, myCenter)
-        drawCircle(Color(0xffdddddd), size.width/6, myCenter, 1f, Stroke(9f))
+        drawCircle(Color(0xffeeeeee), size.width / 6, myCenter)
+        drawCircle(Color(0xffdddddd), size.width / 6, myCenter, 1f, Stroke(9f))
 
         val path1 = Path()
         path1.moveTo(size.width * 5 / 12, myCenter.y)
@@ -175,6 +186,6 @@ fun TurntableView(
 fun TurntablePreview() {
     TurntableView(
         modifier = Modifier.fillMaxSize(),
-        labelList = (0 .. 50).toList().map { it.toString() }
+        labelList = (0..50).toList().map { it.toString() }
     )
 }
