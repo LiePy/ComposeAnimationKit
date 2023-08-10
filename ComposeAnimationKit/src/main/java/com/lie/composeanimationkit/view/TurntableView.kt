@@ -52,14 +52,13 @@ import kotlin.math.sin
 fun TurntableView(
     modifier: Modifier,
     labelList: List<String>,
-    count_: Int? = null
 ) {
     //数据长度和标签长度判断处理，若不相等或为空抛出异常
 //    if (dataList.size != labelList.size || dataList.isEmpty()) {
 //        throw IllegalArgumentException("dataList.size can not be empty,and it must equals to paramList.size!")
 //    }
     //计算数据长度，用于确定绘制几边形
-    val count = count_ ?: labelList.size
+    val count = labelList.size
     //确定最外层代表的数值上限
 //    val maxData = maxData_ ?: dataList.maxOf { it }
 
@@ -143,15 +142,20 @@ fun TurntableView(
         //画中心点
         drawCircle(Color.Black, 7.5f, myCenter)
         rotate(rotation + flingRotation.value) {
-            var startAngle = 0f
             for (i in 0 until count) {
-                drawArc(
-                    Color.hsv(i * roteStep, 1f, 1f),
-                    startAngle, roteStep, true,
-                    Offset(0f, (size.height - size.width) / 2),
-                    Size(size.width, size.width)
-                )
-                startAngle += roteStep
+                rotate(i * roteStep) {
+                    val measuredText = textMeasurer.measure(
+                        AnnotatedString(labelList[i])
+                    )
+                    drawArc(
+                        Color.hsv(i * roteStep, 1f, 1f),
+                        // 这里startAngle必须是270，否则和文本的绘制顺序冲突导致部分文本无法显示,再减一半的step使文本居中
+                        270f- roteStep / 2, roteStep, true,
+                        Offset(0f, (size.height - size.width) / 2),
+                        Size(size.width, size.width)
+                    )
+                    drawText(measuredText, topLeft = Offset(edge / 2, size.height / 2 - radius))
+                }
             }
         }
         drawCircle(Color(0xffeeeeee), size.width/6, myCenter)
@@ -163,12 +167,6 @@ fun TurntableView(
         path1.lineTo(size.width * 7 / 12, myCenter.y)
         path1.close()
         drawPath(path1, Color(0xffeeeeee))
-//        drawPath(path1, Color(0xffdddddd), 1f, Stroke(9f))
-
-//        //画标签文本
-//        drawParamLabel(
-//            count, roteStep, radius, textMeasurer, labelList, rotation + flingRotation.value
-//        )
     }
 }
 
@@ -177,7 +175,6 @@ fun TurntableView(
 fun TurntablePreview() {
     TurntableView(
         modifier = Modifier.fillMaxSize(),
-        labelList = (0 .. 5).toList().map { it.toString() },
-//        count_ = 360
+        labelList = (0 .. 50).toList().map { it.toString() }
     )
 }
