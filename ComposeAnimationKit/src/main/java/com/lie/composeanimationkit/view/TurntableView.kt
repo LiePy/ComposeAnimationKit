@@ -9,11 +9,13 @@
 
 package com.lie.composeanimationkit.view
 
+import android.location.GnssAntennaInfo.PhaseCenterOffset
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -28,8 +30,12 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.*
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import java.lang.Float.min
 import java.lang.Math.abs
@@ -54,6 +60,8 @@ import kotlin.math.sin
 fun TurntableView(
     modifier: Modifier,
     labelList: List<String>,
+    edge: Float = 500f,
+    centerOffset: Offset = Offset(-200f, 200f)
 ) {
     //数据长度和标签长度判断处理，若不相等或为空抛出异常
 //    if (dataList.size != labelList.size || dataList.isEmpty()) {
@@ -162,20 +170,26 @@ fun TurntableView(
                         Color.hsv(i * roteStep, 1f, 1f),
                         // 这里startAngle必须是270，否则和文本的绘制顺序冲突导致部分文本无法显示,再减一半的step使文本居中
                         270f - roteStep / 2, roteStep, true,
-                        Offset(0f, (size.height - size.width) / 2),
-                        Size(size.width, size.width)
+                        Offset(
+                            ((size.width - size.height) / 2).coerceAtLeast(0f),
+                            ((size.height - size.width) / 2).coerceAtLeast(0f)
+                        ),
+                        Size(edge, edge)
                     )
-                    drawText(measuredText, topLeft = Offset(edge / 2, size.height / 2 - radius))
+                    drawText(
+                        measuredText,
+                        topLeft = Offset(size.width / 2, size.height / 2 - radius)
+                    )
                 }
             }
         }
-        drawCircle(Color(0xffeeeeee), size.width / 6, myCenter)
-        drawCircle(Color(0xffdddddd), size.width / 6, myCenter, 1f, Stroke(9f))
+        drawCircle(Color(0xffeeeeee), edge / 6, myCenter)
+        drawCircle(Color(0xffdddddd), edge / 6, myCenter, 1f, Stroke(9f))
 
         val path1 = Path()
-        path1.moveTo(size.width * 5 / 12, myCenter.y)
-        path1.lineTo(myCenter.x, myCenter.y - size.height / 8)
-        path1.lineTo(size.width * 7 / 12, myCenter.y)
+        path1.moveTo(size.width / 2 - edge / 8, myCenter.y)
+        path1.lineTo(myCenter.x, myCenter.y - edge / 4)
+        path1.lineTo(size.width / 2 + edge / 8, myCenter.y)
         path1.close()
         drawPath(path1, Color(0xffeeeeee))
     }
@@ -185,7 +199,7 @@ fun TurntableView(
 @Composable
 fun TurntablePreview() {
     TurntableView(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.size(300.dp, 500.dp),
         labelList = (0..50).toList().map { it.toString() }
     )
 }
