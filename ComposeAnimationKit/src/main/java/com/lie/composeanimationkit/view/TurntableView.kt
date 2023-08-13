@@ -10,6 +10,7 @@
 package com.lie.composeanimationkit.view
 
 import android.location.GnssAntennaInfo.PhaseCenterOffset
+import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -158,14 +159,21 @@ fun TurntableView(
         val measuredText = textMeasurer.measure(
             AnnotatedString(labelList[labelIndex])
         )
-        drawText(measuredText, topLeft = Offset(edge / 2, size.height / 2 - radius - marginTop))
+        drawText(
+            measuredText,
+            topLeft = Offset(
+                edge / 2 - measuredText.size.width / 2,
+                size.height / 2 - radius - marginTop
+            )
+        )
 
         rotate(rotation + flingRotation.value) {
             for (i in 0 until count) {
                 rotate(i * roteStep) {
-                    val measuredText = textMeasurer.measure(
+                    val measuredText2 = textMeasurer.measure(
                         AnnotatedString(labelList[i])
                     )
+                    val desRotation = measuredText2.size.height / (radius * 3.14f) * 90f
                     drawArc(
                         Color.hsv(i * roteStep, 1f, 1f),
                         // 这里startAngle必须是270，否则和文本的绘制顺序冲突导致部分文本无法显示,再减一半的step使文本居中
@@ -176,10 +184,14 @@ fun TurntableView(
                         ),
                         Size(edge, edge)
                     )
-                    drawText(
-                        measuredText,
-                        topLeft = Offset(size.width / 2, size.height / 2 - radius)
-                    )
+
+                    rotate(90f + desRotation) {
+                        drawText(
+                            measuredText2,
+                            topLeft = Offset(0f, size.height / 2)
+                        )
+                    }
+
                 }
             }
         }
@@ -199,7 +211,7 @@ fun TurntableView(
 @Composable
 fun TurntablePreview() {
     TurntableView(
-        modifier = Modifier.size(300.dp, 500.dp),
+        modifier = Modifier.fillMaxSize(),
         labelList = (0..50).toList().map { it.toString() }
     )
 }
