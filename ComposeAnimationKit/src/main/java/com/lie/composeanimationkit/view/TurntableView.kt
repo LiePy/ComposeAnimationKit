@@ -9,41 +9,27 @@
 
 package com.lie.composeanimationkit.view
 
-import android.location.GnssAntennaInfo.PhaseCenterOffset
-import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.PointMode
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.*
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import java.lang.Float.min
-import java.lang.Math.abs
 import kotlin.math.atan2
-import kotlin.math.cos
 import kotlin.math.roundToInt
-import kotlin.math.sin
 
 /**
  * @description: 蜘蛛网雷达折线图
@@ -185,10 +171,12 @@ fun TurntableView(
                         Size(edge, edge)
                     )
 
+                    val textGap = 20f
+
                     rotate(90f + desRotation) {
                         drawText(
                             measuredText2,
-                            topLeft = Offset(0f, size.height / 2)
+                            topLeft = Offset((size.width / 2 + textGap - (edge / 2) ).coerceAtLeast(textGap), size.height / 2)
                         )
                     }
 
