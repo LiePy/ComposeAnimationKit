@@ -43,6 +43,7 @@ import com.lie.composeanimationkit.animation.WaterWavePreview
 import com.lie.composeanimationkit.ui.theme.ComposeAnimationKitTheme
 import com.lie.composeanimationkit.view.DragRotatablePreview
 import com.lie.composeanimationkit.view.SpiderWebRadarLineDiagramPreview
+import com.lie.composeanimationkit.view.TurntablePreview
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,8 +114,11 @@ fun MainView() {
         //蛛网图
         item { MyContainer { SpiderWebRadarLineDiagramPreview() } }
 
-        //转盘组件
+        //可单指转动组件
         item { MyContainer { DragRotatablePreview() } }
+
+        //转盘组件
+        item { MyContainer { TurntablePreview() } }
 
     }
 }

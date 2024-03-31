@@ -61,21 +61,9 @@ fun LA.LoadingButton(
     colors: LoadingButtonColors = defaultLoadingButtonColors,
     size: Size = Size(120, 58),
     durationMillis: Int = 300,
-    readyContent: @Composable () -> Unit = {
-        Text(text = "Upload", color = colors.onReadyContentColor)
-    },
-    successContent: @Composable () -> Unit = {
-        Icon(
-            imageVector = Icons.Default.Check, contentDescription = null,
-            tint = colors.onSuccessContentColor
-        )
-    },
-    errorContent: @Composable () -> Unit = {
-        Icon(
-            imageVector = Icons.Default.Delete, contentDescription = null,
-            tint = colors.onErrorContentColor
-        )
-    },
+    readyContent: @Composable () -> Unit = { defaultReadyContent() },
+    successContent: @Composable () -> Unit = { defaultSuccessContent() },
+    errorContent: @Composable () -> Unit = { defaultErrorContent() },
     onClicked: (LoadingState) -> Unit = {}
 ) {
 
@@ -100,7 +88,7 @@ fun LA.LoadingButton(
         }, convertFromVector = { vector: AnimationVector2D ->
             Size(vector.v1.toInt(), vector.v2.toInt())
         }),
-        animationSpec = tween(durationMillis, 0, LinearEasing)
+        animationSpec = tween(durationMillis, 0, LinearEasing), label = "buttonSize"
     )
 
     //内容透明度动画，自定义animate Value
@@ -121,7 +109,7 @@ fun LA.LoadingButton(
         }, convertFromVector = { vector: AnimationVector4D ->
             ContentAlpha(vector.v1, vector.v2, vector.v3, vector.v4)
         }),
-        animationSpec = tween(durationMillis, 0, LinearEasing)
+        animationSpec = tween(durationMillis, 0, LinearEasing), label = "contentAlpha"
     )
 
     //背景色动画
@@ -132,7 +120,7 @@ fun LA.LoadingButton(
             LoadingState.Success -> colors.onSuccessBackGroundColor
             LoadingState.Error -> colors.onErrorBackgroundColor
         },
-        animationSpec = tween(durationMillis, 0, LinearEasing)
+        animationSpec = tween(durationMillis, 0, LinearEasing), label = "backgroundColor"
     )
 
     //边框动画
@@ -141,7 +129,7 @@ fun LA.LoadingButton(
             LoadingState.Loading -> 4.dp
             else -> 0.dp
         },
-        animationSpec = tween(durationMillis, 0, LinearEasing)
+        animationSpec = tween(durationMillis, 0, LinearEasing), label = "borderWidth"
     )
 
     Box(
@@ -186,6 +174,27 @@ fun LA.LoadingButton(
     }
 
 
+}
+
+@Composable
+fun defaultReadyContent() {
+    Text(text = "Upload", color = defaultLoadingButtonColors.onReadyContentColor)
+}
+
+@Composable
+fun defaultSuccessContent() {
+    Icon(
+        imageVector = Icons.Default.Check, contentDescription = "success",
+        tint = defaultLoadingButtonColors.onSuccessContentColor
+    )
+}
+
+@Composable
+fun defaultErrorContent() {
+    Icon(
+        imageVector = Icons.Default.Delete, contentDescription = "error",
+        tint = defaultLoadingButtonColors.onErrorContentColor
+    )
 }
 
 /**
@@ -317,8 +326,10 @@ fun LoadingButtonPreview() {
         when (it) {
             is LoadingState.Ready ->
                 state.changeToState(LoadingState.Loading)
+
             is LoadingState.Loading ->
                 state.changeToState(LoadingState.Success)
+
             else -> state.changeToState(LoadingState.Ready)
         }
     }

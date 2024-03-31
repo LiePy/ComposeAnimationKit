@@ -109,11 +109,11 @@ class FloatService : Service(), LifecycleOwner, SavedStateRegistryOwner {
     }
 
     private fun openWindow() {
-        windowManager.addView(view, layoutParams)
+        runCatching { windowManager.addView(view, layoutParams) }
     }
 
     private fun closeWindow() {
-        windowManager.removeView(view)
+        runCatching { windowManager.removeView(view) }
     }
 
     override val savedStateRegistry: SavedStateRegistry

@@ -162,7 +162,7 @@ fun SpiderWebRadarLineDiagram(
  * @param roteStep 相邻顶点的圆心角
  * @param radius 相接圆半径
  */
-private fun DrawScope.drawSpiderWebPoints(
+fun DrawScope.drawSpiderWebPoints(
     count: Int, roteStep: Float, radius: Float
 ) {
     val pointsList = mutableListOf<Offset>()
@@ -305,7 +305,7 @@ private fun DrawScope.drawParamLabel(
  * @param rotation 角度
  * @param radius 半径
  */
-private fun DrawScope.calculateXY(
+fun DrawScope.calculateXY(
     rotation: Float, radius: Float
 ): Pair<Float, Float> {
     //将角度单位转换，如180度转换成Pi
